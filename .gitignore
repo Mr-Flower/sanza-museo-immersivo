@@ -1,0 +1,10 @@
+# Master originali: non vanno pubblicati né versionati.
+# Sono ~250 MB e due file superano il limite GitHub di 100 MB per file
+# (il video notturno da 100 MB e il primo GLB da 70 MB).
+# Il sito serve solo assets/, che contiene le versioni ottimizzate.
+risorse/
+
+# File di lavoro temporanei
+_t*.html
+.DS_Store
+Thumbs.db
