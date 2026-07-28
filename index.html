@@ -21,7 +21,8 @@
 <style>
 /* ============================================================
    SANZA · museo immersivo — la montagna e la Madonna della Neve
-   Sfondo: notte stellata → alba (la salita, dal buio alla luce)
+   Nessuna atmosfera dipinta: la pagina è costruita con i campi del brand,
+   bianco e nero che si alternano, azzurro istituzionale e giallo museo.
 
    BRAND BOOK · Sanza, il borgo dell'accoglienza
    Questo sito è la declinazione MUSEO (04.01), quindi:
@@ -39,17 +40,22 @@
    02.14 · vietati i colori fuori palette, le deformazioni del lettering e
            ombre/outline sul marchio.
 
-   Di conseguenza la pagina usa solo #FFA300, #0092BC, nero/bianco e i
-   neutri di fondo: niente varianti inventate del giallo. Dove il giallo non
-   reggerebbe il contrasto (sezione chiara della vetta) si passa ai colori
-   istituzionali — nero per i testi piccoli, azzurro per la quota grande.
+   La pagina usa SOLO questi colori: #FFA300, #0092BC, nero e bianco.
+   Le uniche altre tinte sono trasparenze di bianco su nero e di nero su
+   bianco per i testi secondari e i filetti — non nuovi colori.
+   Le sezioni alternano campo nero e campo bianco (.chiaro), come le tavole
+   del brand book, senza sfumature né passaggi di atmosfera. Il giallo, che
+   sul bianco non regge il contrasto, lì lascia il posto al nero per i testi
+   e all'azzurro per gli elementi grafici.
    ============================================================ */
 :root{
-  --notte:#0c1a21; --notte-2:#142631; --crepuscolo:#2b4150;
-  --grigio-medio:#51616a; --grigio-chiaro:#98a3a6;
-  --alba:#e9eef0; --alba-calda:#f3ece0; --neve:#f5f7f4; --pietra:#a8a89c; --inchiostro:#1d2a30;
-  --azzurro:#0092BC;  /* 02.6 · Pantone 313 C, colore istituzionale */
+  --nero:#000000;     /* 02.6 · Process Black, istituzionale */
+  --azzurro:#0092BC;  /* 02.6 · Pantone 313 C, istituzionale */
   --giallo:#FFA300;   /* 04.01 · Pantone 137 C, declinazione MUSEO */
+  --bianco:#FFFFFF;
+  /* trasparenze dei colori di brand per testi secondari e filetti */
+  --su-nero:rgba(255,255,255,.68); --filo-chiaro:rgba(255,255,255,.18);
+  --su-bianco:rgba(0,0,0,.62);     --filo-scuro:rgba(0,0,0,.16);
   --display:'Archivo','Arial Narrow',sans-serif;
   --testo:'Hanken Grotesk','Helvetica Neue',Arial,sans-serif;
   --rail-w:74px;
@@ -57,8 +63,8 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
-body{font-family:var(--testo);background:var(--notte);color:var(--neve);line-height:1.62;font-size:17px;overflow-x:hidden}
-::selection{background:var(--giallo);color:var(--notte)}
+body{font-family:var(--testo);background:var(--nero);color:var(--bianco);line-height:1.62;font-size:17px;overflow-x:hidden}
+::selection{background:var(--giallo);color:var(--nero)}
 img,svg,canvas{display:block}
 a{color:var(--giallo)}
 h1,h2,h3{font-family:var(--display);line-height:1.06;letter-spacing:-.01em}
@@ -88,43 +94,42 @@ em{font-style:italic}
    è il colore del marchio, non un accento aggiunto.
    02.10 · su fondo scuro il payoff va in bianco, su fondo chiaro in nero.
    02.8 · l'area di rispetto è 2X: attorno al marchio non entra nient'altro. */
-.marchio{display:inline-block;text-decoration:none;--mk-marchio:var(--giallo);--mk-payoff:var(--neve)}
+.marchio{display:inline-block;text-decoration:none;--mk-marchio:var(--giallo);--mk-payoff:var(--bianco)}
 .marchio .mk{display:block;height:var(--mk-h,2.6rem)}
 .marchio .mk-full{width:calc(var(--mk-h,2.6rem)*2.4619)}   /* 238.36/96.82 */
 .marchio .mk-lett{width:calc(var(--mk-h,2.6rem)*1.0074)}   /* 97.54/96.82  */
 .marchio .mk-solo{width:calc(var(--mk-h,2.6rem)*1.2670)}   /* 97.54/76.98  */
 
-.istituzionale{position:sticky;top:0;z-index:60;background:rgba(12,26,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid rgba(245,247,244,.1);display:flex;align-items:center;justify-content:space-between;padding:.7rem 6vw}
+.istituzionale{position:sticky;top:0;z-index:60;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;padding:.7rem 6vw}
 /* 02.9 · sotto la riduzione minima il marchio perde leggibilità. Nella testata
    c'è spazio solo per il lettering: payoff e parola "museo" sarebbero alti
    pochi pixel, quindi si usa il solo logotipo — il giallo della declinazione
    resta e il lockup completo sta nell'hero e nel piede. */
 .istituzionale .marchio{--mk-h:1.9rem;margin-right:2rem}
 .istituzionale .menu{display:flex;gap:1.5rem;font-size:.82rem;font-weight:600}
-.istituzionale .menu a{color:var(--pietra);text-decoration:none;transition:color .2s}
+.istituzionale .menu a{color:var(--su-nero);text-decoration:none;transition:color .2s}
 .istituzionale .menu a:hover{color:var(--giallo)}
 @media (max-width:820px){.istituzionale .menu{display:none}}
 
-#rail{position:fixed;left:0;top:0;bottom:0;width:var(--rail-w);z-index:50;pointer-events:none;border-right:1px solid rgba(245,247,244,.1);background:linear-gradient(to right,rgba(12,26,33,.55),transparent)}
-#rail .linea{position:absolute;top:7rem;bottom:7rem;left:50%;width:2px;background:rgba(245,247,244,.14);transform:translateX(-50%)}
+#rail{position:fixed;left:0;top:0;bottom:0;width:var(--rail-w);z-index:50;pointer-events:none;border-right:1px solid rgba(255,255,255,.1);background:linear-gradient(to right,rgba(0,0,0,.55),transparent)}
+#rail .linea{position:absolute;top:7rem;bottom:7rem;left:50%;width:2px;background:rgba(255,255,255,.14);transform:translateX(-50%)}
 #rail .fill{position:absolute;bottom:7rem;left:50%;width:2px;height:0;background:var(--giallo);transform:translateX(-50%);transition:height .1s linear;box-shadow:0 0 8px rgba(255,163,0,.6)}
 #rail .marker{position:absolute;left:50%;bottom:7rem;width:18px;height:21px;color:var(--giallo);transform:translate(-50%,50%);transition:bottom .1s linear;filter:drop-shadow(0 0 5px rgba(255,163,0,.7))}
-#rail .quota{position:absolute;left:50%;bottom:7rem;transform:translate(-50%,calc(50% - 26px));font-family:var(--testo);font-weight:700;font-size:.68rem;color:var(--giallo);white-space:nowrap;background:var(--notte);padding:.1rem .35rem;border:1px solid rgba(255,163,0,.4);border-radius:3px;transition:bottom .1s linear}
-#rail .tacca{position:absolute;left:50%;width:8px;height:2px;background:rgba(245,247,244,.3);transform:translateX(-50%)}
+#rail .quota{position:absolute;left:50%;bottom:7rem;transform:translate(-50%,calc(50% - 26px));font-family:var(--testo);font-weight:700;font-size:.68rem;color:var(--giallo);white-space:nowrap;background:var(--nero);padding:.1rem .35rem;border:1px solid rgba(255,163,0,.4);border-radius:3px;transition:bottom .1s linear}
+#rail .tacca{position:absolute;left:50%;width:8px;height:2px;background:rgba(255,255,255,.3);transform:translateX(-50%)}
 /* l'etichetta della tacca sporge dal righello sul contenuto: sulle sezioni
    chiare il testo chiaro sparirebbe, quindi viaggia su una pastiglia scura
    come la quota, e si legge su qualsiasi fondo */
-#rail .tacca span{position:absolute;left:10px;top:-.62em;font-family:var(--testo);font-size:.58rem;font-weight:600;color:rgba(245,247,244,.72);white-space:nowrap;background:rgba(12,26,33,.82);padding:.14em .4em;border-radius:3px;backdrop-filter:blur(4px)}
+#rail .tacca span{position:absolute;left:10px;top:-.62em;font-family:var(--testo);font-size:.58rem;font-weight:600;color:rgba(255,255,255,.72);white-space:nowrap;background:rgba(0,0,0,.82);padding:.14em .4em;border-radius:3px;backdrop-filter:blur(4px)}
 main{margin-left:var(--rail-w)}
 
 /* HERO */
-#hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:radial-gradient(ellipse 80% 50% at 70% 110%, rgba(43,65,80,.5), transparent 60%), var(--notte)}
-#cielo-hero{position:absolute;inset:0;width:100%;height:100%}
+#hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
 #hero .testa{position:relative;z-index:2;padding:0 6vw 1.5rem}
 #hero .marchio{--mk-h:clamp(4.2rem,11vw,8.6rem)}
-#hero .luogo{font-size:.8rem;font-weight:600;letter-spacing:.16em;color:var(--pietra);margin-bottom:1.6rem;text-transform:uppercase}
-#hero .claim{max-width:42ch;margin-top:1.6rem;font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:300;color:rgba(245,247,244,.9)}
-#hero .invito{margin-top:2.4rem;display:inline-flex;align-items:center;gap:.7rem;background:var(--giallo);color:var(--notte);font-weight:700;font-size:.92rem;text-decoration:none;padding:.85rem 1.5rem;border-radius:99px;transition:transform .2s,box-shadow .2s}
+#hero .luogo{font-size:.8rem;font-weight:600;letter-spacing:.16em;color:var(--su-nero);margin-bottom:1.6rem;text-transform:uppercase}
+#hero .claim{max-width:42ch;margin-top:1.6rem;font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:300;color:rgba(255,255,255,.9)}
+#hero .invito{margin-top:2.4rem;display:inline-flex;align-items:center;gap:.7rem;background:var(--giallo);color:var(--nero);font-weight:700;font-size:.92rem;text-decoration:none;padding:.85rem 1.5rem;border-radius:99px;transition:transform .2s,box-shadow .2s}
 #hero .invito:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,163,0,.3)}
 #hero .invito .fr{animation:giu 2s ease-in-out infinite}
 @keyframes giu{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
@@ -133,50 +138,48 @@ main{margin-left:var(--rail-w)}
 section{padding:6.5rem 6vw}
 .sez{max-width:1010px;margin:0 auto}
 
-#mappa{background:linear-gradient(var(--notte),var(--notte-2))}
-#religioso{background:linear-gradient(var(--notte-2),var(--crepuscolo))}
-#vallevona{background:var(--crepuscolo)}
-#tresd{background:var(--grigio-medio)}
-#cervati{background:linear-gradient(var(--grigio-chiaro),var(--alba) 45%,var(--alba-calda))}
-
-/* sezione chiara (vetta): testo scuro */
-#cervati,#cervati p{color:var(--inchiostro)}
-#cervati .eyebrow{color:var(--inchiostro)}
-#cervati .lede{color:#2c3a41}
-#cervati .dida{color:#5b6b72}
-/* su fondo chiaro il bordo chiaro delle cornici sparirebbe: si inverte */
-#cervati .viewer,#cervati .video-cornice{border-color:rgba(29,42,48,.18)}
+/* I campi si alternano, nero e bianco, senza sfumature: è il ritmo delle
+   tavole del brand book. Il default della pagina è il campo nero; .chiaro
+   ribalta tutto quello che va ribaltato. */
+#hero,#religioso,#tresd{background:var(--nero)}
+.chiaro{background:var(--bianco);color:var(--nero)}
+.chiaro p{color:var(--nero)}
+.chiaro a{color:var(--azzurro)}
+/* sul bianco il giallo non regge il contrasto: il testo passa al nero e
+   l'accento resta nel filetto, in azzurro istituzionale */
+.chiaro .eyebrow{color:var(--nero)}
+.chiaro .eyebrow::before{background:var(--azzurro)}
+.chiaro .dida{color:var(--su-bianco)}
+.chiaro .viewer,.chiaro .video-cornice,.chiaro .mappa-cont{border-color:var(--filo-scuro);box-shadow:0 10px 28px rgba(0,0,0,.10)}
+.chiaro .tappe a{color:var(--nero);border-color:var(--filo-scuro)}
+.chiaro .tappe a:hover{background:rgba(0,0,0,.04)}
+.chiaro .tappe b{color:var(--azzurro)}
+.chiaro .tappe span{color:var(--su-bianco)}
+.chiaro .dot{color:var(--azzurro)}
 
 /* mappa */
-.mappa-cont{margin-top:2.2rem;border:1px solid rgba(245,247,244,.14);border-radius:10px;overflow:hidden;background:var(--notte-2);aspect-ratio:16/9;min-height:340px}
+.mappa-cont{margin-top:2.2rem;border:1px solid var(--filo-chiaro);border-radius:10px;overflow:hidden;background:var(--nero);aspect-ratio:16/9;min-height:340px}
 .mappa-cont iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.9)}
 /* le tre tappe, che prima erano i nodi disegnati sulla mappa */
 .tappe{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem;margin-top:1.2rem}
-.tappe a{display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;align-items:baseline;text-decoration:none;color:var(--neve);border:1px solid rgba(245,247,244,.14);border-left:3px solid var(--giallo);border-radius:8px;padding:.8rem 1rem;font-size:.86rem;font-weight:600;transition:background .2s,transform .2s}
-.tappe a:hover{background:rgba(245,247,244,.05);transform:translateY(-2px)}
+.tappe a{display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;align-items:baseline;text-decoration:none;color:var(--bianco);border:1px solid rgba(255,255,255,.14);border-left:3px solid var(--giallo);border-radius:8px;padding:.8rem 1rem;font-size:.86rem;font-weight:600;transition:background .2s,transform .2s}
+.tappe a:hover{background:rgba(255,255,255,.05);transform:translateY(-2px)}
 .tappe b{color:var(--giallo);font-weight:800}
-.tappe span{grid-column:2;display:block;font-weight:500;font-size:.78rem;color:var(--pietra);margin-top:.15rem}
+.tappe span{grid-column:2;display:block;font-weight:500;font-size:.78rem;color:var(--su-nero);margin-top:.15rem}
 .tappe .dot{grid-row:span 2;align-self:center}
-.nodo{cursor:pointer}
-.nodo .alone{fill:var(--giallo);opacity:0;transition:opacity .25s}
-.nodo:hover .alone,.nodo:focus .alone{opacity:.2}
-.nodo text{font-family:var(--testo);font-weight:600;font-size:11px;fill:var(--neve);paint-order:stroke;stroke:#0c1a21;stroke-width:3px}
-.nodo text.small{font-weight:500;fill:var(--pietra)}
-.legenda{display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:1.1rem;font-size:.8rem;font-weight:600;color:var(--pietra)}
-.legenda span{display:inline-flex;align-items:center;gap:.5rem}
 .dot{width:11px;height:13px;color:var(--giallo)}
 
 /* viewer */
-.viewer{margin:2rem 0 .8rem;position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(245,247,244,.16);background:#000;box-shadow:0 12px 32px rgba(0,0,0,.35)}
-.viewer .tag{position:absolute;top:0;left:0;z-index:5;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--giallo);color:var(--notte);padding:.45rem .8rem;border-bottom-right-radius:8px}
+.viewer{margin:2rem 0 .8rem;position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.16);background:#000;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.viewer .tag{position:absolute;top:0;left:0;z-index:5;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--giallo);color:var(--nero);padding:.45rem .8rem;border-bottom-right-radius:8px}
 /* tutti i 360 hanno la stessa finestra, quella del più ampio (la vetta) */
 .pano{width:100%;height:70vh;min-height:440px}
 #viewer3d{width:100%;height:70vh;min-height:440px;cursor:grab;touch-action:none}
 #viewer3d:active{cursor:grabbing}
 /* zoom del 3D: rotella e pinch, più due pulsanti per chi non ha la rotella */
 .viewer .zoom{position:absolute;right:.7rem;bottom:.7rem;z-index:6;display:flex;flex-direction:column;gap:.35rem}
-.viewer .zoom button{width:34px;height:34px;padding:0;border:1px solid rgba(245,247,244,.25);border-radius:7px;background:rgba(12,26,33,.72);color:var(--neve);font-family:var(--display);font-weight:800;font-size:1.15rem;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s,color .2s,border-color .2s}
-.viewer .zoom button:hover{background:var(--giallo);color:var(--notte);border-color:var(--giallo)}
+.viewer .zoom button{width:34px;height:34px;padding:0;border:1px solid rgba(255,255,255,.25);border-radius:7px;background:rgba(0,0,0,.72);color:var(--bianco);font-family:var(--display);font-weight:800;font-size:1.15rem;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s,color .2s,border-color .2s}
+.viewer .zoom button:hover{background:var(--giallo);color:var(--nero);border-color:var(--giallo)}
 .viewer .zoom button svg{width:15px;height:15px;margin:0 auto}
 /* a schermo intero il riquadro e il canvas prendono tutto lo spazio */
 .viewer:fullscreen{border-radius:0;border:0;display:flex;align-items:center;justify-content:center}
@@ -184,52 +187,53 @@ section{padding:6.5rem 6vw}
 /* i 360 non zoomano più con la rotella (la pagina deve poter scorrere anche
    con il puntatore sopra il panorama): restano i pulsanti di pannellum,
    spostati in basso a destra perché in alto a sinistra c'è l'etichetta */
+.viewer .pnlm-container{background:var(--nero)}
 .viewer .pnlm-controls-container{top:auto;bottom:.7rem;left:auto;right:.7rem}
-.viewer .pnlm-controls{margin-top:0;background-color:rgba(245,247,244,.92);border-color:rgba(12,26,33,.45)}
+.viewer .pnlm-controls{margin-top:0;background-color:rgba(255,255,255,.92);border-color:rgba(0,0,0,.45)}
 /* stato di caricamento del modello 3D (2 MB): si rimuove da solo a fine load */
-.viewer .caric{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;pointer-events:none;background:#232f33}
+.viewer .caric{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;pointer-events:none;background:var(--nero)}
 .viewer .caric .pct{font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--giallo)}
-.viewer .caric .txt{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--pietra)}
-.viewer .caric .err{font-size:.82rem;font-weight:500;line-height:1.65;color:var(--pietra);text-align:center;max-width:46ch;padding:0 1.5rem}
-.viewer .caric .err code{font-size:.9em;background:rgba(245,247,244,.08);border:1px solid rgba(245,247,244,.14);padding:.05em .35em;border-radius:4px;color:var(--giallo);font-weight:600}
-.viewer .caric .err em{color:var(--neve);font-style:italic}
-.dida{font-size:.78rem;font-weight:500;color:var(--pietra);max-width:none}
+.viewer .caric .txt{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--su-nero)}
+.viewer .caric .err{font-size:.82rem;font-weight:500;line-height:1.65;color:var(--su-nero);text-align:center;max-width:46ch;padding:0 1.5rem}
+.viewer .caric .err code{font-size:.9em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:.05em .35em;border-radius:4px;color:var(--giallo);font-weight:600}
+.viewer .caric .err em{color:var(--bianco);font-style:italic}
+.dida{font-size:.78rem;font-weight:500;color:var(--su-nero);max-width:none}
 /* riga di credito in coda alla didascalia; dove è ancora fra parentesi quadre
    il credito è da accertare (le due riprese d'archivio) */
 .dida .credito{opacity:.72;font-style:italic}
 
 /* blocco video */
-.video-cornice{margin:2rem 0 .8rem;position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(245,247,244,.16);background:#000;aspect-ratio:16/9;box-shadow:0 12px 32px rgba(0,0,0,.35)}
-.video-cornice .tag{position:absolute;top:0;left:0;z-index:5;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--giallo);color:var(--notte);padding:.45rem .8rem;border-bottom-right-radius:8px}
+.video-cornice{margin:2rem 0 .8rem;position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.16);background:#000;aspect-ratio:16/9;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.video-cornice .tag{position:absolute;top:0;left:0;z-index:5;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--giallo);color:var(--nero);padding:.45rem .8rem;border-bottom-right-radius:8px}
 .video-cornice iframe,.video-cornice video{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;object-fit:cover}
-.video-cornice .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;text-align:center;padding:1.5rem;background:radial-gradient(ellipse at center,#16242c,#0a141a)}
-.video-cornice .ph .play{width:72px;height:72px;border-radius:50%;background:var(--giallo);color:var(--notte);display:flex;align-items:center;justify-content:center;font-size:1.5rem}
-.video-cornice .ph .txt{font-size:.8rem;font-weight:600;letter-spacing:.02em;color:var(--pietra);max-width:42ch;line-height:1.5}
+.video-cornice .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;text-align:center;padding:1.5rem;background:var(--nero)}
+.video-cornice .ph .play{width:72px;height:72px;border-radius:50%;background:var(--giallo);color:var(--nero);display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.video-cornice .ph .txt{font-size:.8rem;font-weight:600;letter-spacing:.02em;color:var(--su-nero);max-width:42ch;line-height:1.5}
 .video-cornice .ph .txt b{color:var(--giallo)}
 
 /* schede */
 .schede{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:1.2rem;margin-top:2.4rem}
-.scheda{border:1px solid rgba(245,247,244,.14);border-top:3px solid var(--giallo);border-radius:10px;padding:1.4rem 1.5rem;background:rgba(245,247,244,.04);transition:transform .25s,box-shadow .25s}
+.scheda{border:1px solid rgba(255,255,255,.14);border-top:3px solid var(--giallo);border-radius:10px;padding:1.4rem 1.5rem;background:rgba(255,255,255,.04);transition:transform .25s,box-shadow .25s}
 .scheda:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.25)}
 .scheda .casetta{width:20px;height:23px;margin-bottom:.9rem;color:var(--giallo)}
 .scheda .quando{font-size:.72rem;font-weight:700;letter-spacing:.1em;margin-bottom:.5rem;color:var(--giallo)}
-.scheda p{font-size:.92rem;margin:0;color:rgba(245,247,244,.85)}
+.scheda p{font-size:.92rem;margin:0;color:rgba(255,255,255,.85)}
 
 #tresd .eyebrow{color:var(--giallo)}
 
 /* vetta */
 #cervati{display:flex;align-items:center;min-height:auto;padding-bottom:3rem}
 #cervati .quota-big{font-family:var(--display);font-weight:900;font-size:clamp(3.5rem,11vw,8rem);line-height:.9;letter-spacing:-.02em;color:var(--azzurro)}
-#cervati .quota-big small{display:block;font-size:.15em;font-weight:700;letter-spacing:.22em;color:#6b7a80;margin-top:1rem}
+#cervati .quota-big small{display:block;font-size:.15em;font-weight:700;letter-spacing:.22em;color:var(--su-bianco);margin-top:1rem}
 
 /* Le case del brand book chiudono la luce dell'alba in cui finisce la salita e
    il piede comincia sotto di loro: nessuna fascia scura sopra le case, e le
    sagome restano alle proporzioni del pattern, mai stirate.
    margin-left come <main>, così le case non finiscono sotto il righello delle
    quote, che resta la colonna di sinistra. */
-footer{margin-left:var(--rail-w);background:var(--alba-calda);color:var(--neve);position:relative;overflow:hidden}
+footer{margin-left:var(--rail-w);background:var(--bianco);color:var(--bianco);position:relative;overflow:hidden}
 footer .skyf{width:100%;height:auto;display:block}
-footer .piede{background:var(--inchiostro)}
+footer .piede{background:var(--nero)}
 footer .piede{padding:2.6rem 6vw 3rem;display:grid;grid-template-columns:1.3fr 1fr;gap:2rem;align-items:end}
 @media (max-width:760px){footer .piede{grid-template-columns:1fr}}
 /* 02.8 · area di rispetto: il marchio del piede sta staccato dallo skyline */
@@ -237,9 +241,9 @@ footer .marchio{--mk-h:3.2rem}
 footer .contatti{font-size:.84rem;font-weight:600;line-height:1.8;margin-top:1.1rem}
 footer .contatti a{color:var(--giallo)}
 footer .hash{font-weight:800;color:var(--giallo)}
-footer .credits{font-size:.66rem;font-weight:500;color:var(--pietra);line-height:1.7;text-align:right}
+footer .credits{font-size:.66rem;font-weight:500;color:var(--su-nero);line-height:1.7;text-align:right}
 @media (max-width:760px){footer .credits{text-align:left}}
-footer .credits strong{color:var(--neve)}
+footer .credits strong{color:var(--bianco)}
 
 :focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
 </style>
@@ -274,7 +278,6 @@ footer .credits strong{color:var(--neve)}
 
 <!-- HERO -->
 <section id="hero">
-  <canvas id="cielo-hero" aria-hidden="true"></canvas>
   <div class="testa">
     <div class="luogo">Parco Nazionale del Cilento, Vallo di Diano e Alburni</div>
     <span class="marchio" role="img" aria-label="Sanza museo · il borgo dell’accoglienza">
@@ -287,7 +290,7 @@ footer .credits strong{color:var(--neve)}
 </section>
 
 <!-- LA SALITA (MAPPA) -->
-<section id="mappa">
+<section id="mappa" class="chiaro">
   <div class="sez">
     <div class="eyebrow rivela">La salita</div>
     <h2 class="rivela">Dal borgo alla vetta più alta della Campania</h2>
@@ -321,7 +324,7 @@ footer .credits strong{color:var(--neve)}
 </section>
 
 <!-- VALLEVONA -->
-<section id="vallevona">
+<section id="vallevona" class="chiaro">
   <div class="sez">
     <div class="eyebrow rivela">Vallevona · ~1500 m, a metà salita</div>
     <h2 class="rivela">L'altopiano del silenzio</h2>
@@ -360,7 +363,7 @@ footer .credits strong{color:var(--neve)}
 </section>
 
 <!-- LA VETTA (CERVATI) -->
-<section id="cervati">
+<section id="cervati" class="chiaro">
   <div class="sez">
     <div class="eyebrow rivela">L'arrivo · Monte Cervati</div>
     <div class="quota-big rivela">1898<small>METRI · LA VETTA</small></div>
@@ -463,25 +466,8 @@ function skyline(svg,moduli,fill,cut,accenti,coda){
   svg.setAttribute('viewBox',`0 0 ${moduli*W} ${H+ext}`);
   svg.innerHTML=parts;
 }
-skyline(document.getElementById('skyHero'),3,'#f5f7f4','#0c1a21',{2:'#FFA300',9:'#FFA300',15:'#FFA300'});
-skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:'#FFA300',15:'#FFA300'});
-
-/* cielo del hero: notte stellata + torce gialle */
-(function(){
-  const cv=document.getElementById('cielo-hero'),ctx=cv.getContext('2d');let stelle=[],torce=[];
-  function ridge(x,w){const t=x/w;return 0.62-0.16*Math.exp(-Math.pow((t-0.72)/0.10,2))-0.05*Math.sin(t*9.1)-0.03*Math.sin(t*23.7+1.3);}
-  function resize(){cv.width=cv.offsetWidth*devicePixelRatio;cv.height=cv.offsetHeight*devicePixelRatio;
-    stelle=Array.from({length:220},()=>({x:Math.random(),y:Math.random()*0.6,r:Math.random()*1.3+0.3,a:Math.random()}));
-    torce=Array.from({length:14},(_,i)=>({t:0.30+i*0.030,off:Math.random()*6.28}));draw(0);}
-  function draw(time){const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
-    stelle.forEach(s=>{const tw=0.55+0.45*Math.sin(time/900+s.a*6.28);ctx.globalAlpha=0.25+0.55*tw;ctx.fillStyle='#dfe9f2';ctx.beginPath();ctx.arc(s.x*W,s.y*H,s.r*devicePixelRatio,0,7);ctx.fill();});
-    ctx.globalAlpha=1;ctx.fillStyle='#091318';ctx.beginPath();ctx.moveTo(0,H);for(let x=0;x<=W;x+=6)ctx.lineTo(x,ridge(x,W)*H);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
-    torce.forEach(p=>{const x=p.t*W,y=ridge(x,W)*H+10*devicePixelRatio,fl=0.6+0.4*Math.sin(time/250+p.off);ctx.globalAlpha=0.85*fl;ctx.fillStyle='#FFA300';ctx.shadowColor='#FFA300';ctx.shadowBlur=10*devicePixelRatio;ctx.beginPath();ctx.arc(x,y,1.8*devicePixelRatio,0,7);ctx.fill();ctx.shadowBlur=0;});
-    ctx.globalAlpha=1;}
-  const ridotto=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  function loop(t){draw(t);if(!ridotto)requestAnimationFrame(loop);}
-  addEventListener('resize',resize);resize();requestAnimationFrame(loop);
-})();
+skyline(document.getElementById('skyHero'),3,'#FFFFFF','#000000',{2:'#FFA300',9:'#FFA300',15:'#FFA300'});
+skyline(document.getElementById('skyFoot'),3,'#0092BC','#FFFFFF',{2:'#FFA300',8:'#FFA300',15:'#FFA300'});
 
 /* ============================================================
    RIGHELLO DELLE QUOTE (rail)
@@ -530,29 +516,6 @@ skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:
 /* reveal */
 (function(){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}}),{threshold:0.12});document.querySelectorAll('.rivela').forEach(el=>io.observe(el));})();
 
-/* ============================================================
-   PANORAMI PLACEHOLDER (sostituiti dalle immagini reali se presenti)
-   ============================================================ */
-function panoGiorno(opt){
-  const W=2048,H=1024,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');const oz=H*opt.oz;
-  const g=x.createLinearGradient(0,0,0,oz);g.addColorStop(0,opt.cielo[0]);g.addColorStop(0.6,opt.cielo[1]);g.addColorStop(1,opt.cielo[2]);x.fillStyle=g;x.fillRect(0,0,W,oz);
-  // sole / alone
-  x.save();x.globalAlpha=.85;const sx=W*opt.solex,sy=H*0.16,ag=x.createRadialGradient(sx,sy,4,sx,sy,90);ag.addColorStop(0,'rgba(255,236,190,.95)');ag.addColorStop(1,'rgba(255,236,190,0)');x.fillStyle=ag;x.beginPath();x.arc(sx,sy,90,0,7);x.fill();x.fillStyle='#fff7e6';x.beginPath();x.arc(sx,sy,16,0,7);x.fill();x.restore();
-  // creste lontane in più strati
-  const k=6.28318/W;
-  function cresta(base,amp,col){x.fillStyle=col;x.beginPath();x.moveTo(0,oz);for(let px=0;px<=W;px+=4){const y=base*H-amp*Math.exp(-Math.pow(((px/W+0.5)%1-0.5)/0.12,2))-amp*0.3*Math.sin(3*k*px)-amp*0.15*Math.sin(7*k*px+1);x.lineTo(px,y);}x.lineTo(W,oz);x.closePath();x.fill();}
-  opt.creste.forEach(cc=>cresta(cc[0],cc[1],cc[2]));
-  // terreno
-  const gt=x.createLinearGradient(0,oz,0,H);gt.addColorStop(0,opt.terra[0]);gt.addColorStop(1,opt.terra[1]);x.fillStyle=gt;x.fillRect(0,oz,W,H-oz);
-  // doline / sassi
-  for(let i=0;i<opt.detriti;i++){const py=oz+Math.pow(Math.random(),0.6)*(H-oz),s=(py-oz)/(H-oz);x.globalAlpha=0.12+s*0.22;x.fillStyle=Math.random()>0.5?opt.macchia[0]:opt.macchia[1];x.beginPath();x.ellipse(Math.random()*W,py,5+s*26,2+s*9,0,0,7);x.fill();}x.globalAlpha=1;
-  return c.toDataURL('image/jpeg',0.85);
-}
-function panoVallevona(){return panoGiorno({oz:0.56,solex:0.72,cielo:['#aebfc9','#8aa3b2','#cdd9de'],
-  creste:[[0.56,70,'#5e7c7a'],[0.585,46,'#46615f']],terra:['#48635a','#2e463f'],macchia:['#3c544a','#2c3f38'],detriti:240});}
-function panoCervati(){return panoGiorno({oz:0.46,solex:0.2,cielo:['#cfe2ec','#9ec6dc','#f3e6cf'],
-  creste:[[0.5,120,'#9fb6bf'],[0.56,80,'#7c97a3'],[0.62,50,'#5d7783']],terra:['#86977f','#5b6e55'],macchia:['#73876a','#566a4f'],detriti:200});}
-
 /* viewer 360 generico
    HFOV_APERTO è l'apertura di partenza, ed è anche il massimo (maxHfov): il
    panorama si apre già alla distanza maggiore e da lì semmai ci si avvicina.
@@ -566,9 +529,9 @@ function panoCervati(){return panoGiorno({oz:0.46,solex:0.2,cielo:['#cfe2ec','#9
    pagina continua a scorrere. Al suo posto compaiono i pulsanti +/− di
    pannellum (showZoomCtrl), e su touch resta la pinch. */
 const HFOV_APERTO=100;
-function avviaPano(id,file,generatore,hotSpots,opt){
+function avviaPano(id,file,hotSpots,opt){
   if(typeof pannellum==='undefined')return;
-  pannellum.viewer(id,Object.assign({type:'equirectangular',panorama:file||generatore(),autoLoad:true,autoRotate:-1.5,compass:false,
+  pannellum.viewer(id,Object.assign({type:'equirectangular',panorama:file,autoLoad:true,autoRotate:-1.5,compass:false,
     showZoomCtrl:true,mouseZoom:false,doubleClickZoom:false,hfov:HFOV_APERTO,maxHfov:HFOV_APERTO,hotSpots:hotSpots},opt||{}));
 }
 function lazy(id,cb){new IntersectionObserver((es,io)=>es.forEach(e=>{if(e.isIntersecting){cb();io.unobserve(e.target);}}),{rootMargin:'200px'}).observe(document.getElementById(id));}
@@ -580,16 +543,16 @@ function lazy(id,cb){new IntersectionObserver((es,io)=>es.forEach(e=>{if(e.isInt
    viewer.getYaw() dalla console. */
 /* Le viste iniziali sono scelte sull'immagine reale: inquadrano il soggetto
    ed evitano il sole bruciato (sul picco è a yaw +45). */
-lazy('viewer360-vallevona',()=>avviaPano('viewer360-vallevona',PANO_VALLEVONA,panoVallevona,
+lazy('viewer360-vallevona',()=>avviaPano('viewer360-vallevona',PANO_VALLEVONA,
   [],{pitch:0,yaw:35}));        // bocca del tunnel a sinistra, apertura illuminata a destra
 
-lazy('viewer360-cervati',()=>avviaPano('viewer360-cervati',PANO_CERVATI,panoCervati,
+lazy('viewer360-cervati',()=>avviaPano('viewer360-cervati',PANO_CERVATI,
   [],{pitch:-2,yaw:180}));      // il crinale e le valli lontane, opposto al sole
 
-lazy('viewer360-santuario',()=>avviaPano('viewer360-santuario',PANO_SANTUARIO,panoCervati,
+lazy('viewer360-santuario',()=>avviaPano('viewer360-santuario',PANO_SANTUARIO,
   [],{pitch:0,yaw:180}));       // gli edifici del santuario stanno sulla giunzione del panorama
 
-lazy('viewer360-grotta',()=>avviaPano('viewer360-grotta',PANO_GROTTA,panoCervati,
+lazy('viewer360-grotta',()=>avviaPano('viewer360-grotta',PANO_GROTTA,
   [],{pitch:5,yaw:0}));         // la nicchia con l'immagine è centrata sull'asse dello scatto
 
 /* ============================================================
@@ -605,11 +568,11 @@ function initThree(){if(tre||typeof THREE==='undefined')return;tre=true;
   const canvas=document.getElementById('viewer3d'),stato=document.getElementById('caric3d');
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
   renderer.outputEncoding=THREE.sRGBEncoding;      // le texture del rilievo sono sRGB
-  const scena=new THREE.Scene();scena.background=new THREE.Color(0x232f33);
+  const scena=new THREE.Scene();scena.background=new THREE.Color(0x000000);
   const camera=new THREE.PerspectiveCamera(40,2,0.01,100);
   /* niente piano di terra né nebbia: la statua porta il proprio basamento
      e resta isolata su fondo neutro, come un oggetto in vetrina. */
-  scena.add(new THREE.HemisphereLight(0xbfcbd0,0x2a2620,0.95));
+  scena.add(new THREE.HemisphereLight(0xffffff,0x3a3a3a,0.95));
   const luna=new THREE.DirectionalLight(0xeef2f4,1.15);luna.position.set(-5,8,4);scena.add(luna);
   const torcia=new THREE.PointLight(0xFFA300,1.0,14);torcia.position.set(2.2,1.2,2.5);scena.add(torcia);
 
