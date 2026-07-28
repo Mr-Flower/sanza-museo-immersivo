@@ -22,7 +22,7 @@
 /* ============================================================
    SANZA · museo immersivo — la montagna e la Madonna della Neve
    Nessuna atmosfera dipinta: la pagina è costruita con i campi del brand,
-   bianco e nero che si alternano, azzurro istituzionale e giallo museo.
+   azzurro istituzionale e bianco che si alternano, testi sempre in nero.
 
    BRAND BOOK · Sanza, il borgo dell'accoglienza
    Questo sito è la declinazione MUSEO (04.01), quindi:
@@ -41,12 +41,14 @@
            ombre/outline sul marchio.
 
    La pagina usa SOLO questi colori: #FFA300, #0092BC, nero e bianco.
-   Le uniche altre tinte sono trasparenze di bianco su nero e di nero su
-   bianco per i testi secondari e i filetti — non nuovi colori.
-   Le sezioni alternano campo nero e campo bianco (.chiaro), come le tavole
-   del brand book, senza sfumature né passaggi di atmosfera. Il giallo, che
-   sul bianco non regge il contrasto, lì lascia il posto al nero per i testi
-   e all'azzurro per gli elementi grafici.
+   Le uniche altre tinte sono trasparenze di nero per i testi secondari e i
+   filetti — non nuovi colori.
+   I campi alternano azzurro istituzionale e bianco (.chiaro), come le tavole
+   del brand book, senza sfumature né passaggi di atmosfera. Il nero non fa
+   mai da fondo: è il colore dei testi su entrambi i campi (nero su azzurro
+   è 5,5:1, ampiamente leggibile). Il giallo, che come testo non reggerebbe
+   né sull'azzurro né sul bianco, resta agli elementi grafici — le etichette
+   piene, il pulsante, le case d'accento, il marchio sul campo bianco.
    ============================================================ */
 :root{
   --nero:#000000;     /* 02.6 · Process Black, istituzionale */
@@ -54,8 +56,8 @@
   --giallo:#FFA300;   /* 04.01 · Pantone 137 C, declinazione MUSEO */
   --bianco:#FFFFFF;
   /* trasparenze dei colori di brand per testi secondari e filetti */
-  --su-nero:rgba(255,255,255,.68); --filo-chiaro:rgba(255,255,255,.18);
-  --su-bianco:rgba(0,0,0,.62);     --filo-scuro:rgba(0,0,0,.16);
+  --testo-2:rgba(0,0,0,.82);   /* testo secondario: regge sia sull'azzurro sia sul bianco */
+  --filo:rgba(0,0,0,.18);      /* filetti e bordi */
   --display:'Archivo','Arial Narrow',sans-serif;
   --testo:'Hanken Grotesk','Helvetica Neue',Arial,sans-serif;
   --rail-w:74px;
@@ -63,10 +65,10 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
-body{font-family:var(--testo);background:var(--nero);color:var(--bianco);line-height:1.62;font-size:17px;overflow-x:hidden}
+body{font-family:var(--testo);background:var(--azzurro);color:var(--nero);line-height:1.62;font-size:17px;overflow-x:hidden}
 ::selection{background:var(--giallo);color:var(--nero)}
 img,svg,canvas{display:block}
-a{color:var(--giallo)}
+a{color:var(--nero)}
 h1,h2,h3{font-family:var(--display);line-height:1.06;letter-spacing:-.01em}
 h2{font-size:clamp(2rem,4.4vw,3.4rem);font-weight:800;margin-bottom:1.3rem}
 h3{font-size:1.15rem;font-weight:700;margin:0 0 .4rem}
@@ -74,8 +76,8 @@ p{max-width:60ch;margin-bottom:1.05rem}
 p.lede{font-size:1.18rem;font-weight:400}
 em{font-style:italic}
 .wrap{max-width:1120px;margin:0 auto;padding:0 6vw}
-.eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;display:inline-flex;align-items:center;gap:.7rem;margin-bottom:1.3rem;color:var(--giallo)}
-.eyebrow::before{content:'';width:1.8rem;height:3px;background:currentColor;border-radius:2px}
+.eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;display:inline-flex;align-items:center;gap:.7rem;margin-bottom:1.3rem;color:var(--nero)}
+.eyebrow::before{content:'';width:1.8rem;height:3px;background:var(--giallo);border-radius:2px}
 .rivela{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
 .rivela.on{opacity:1;transform:none}
 
@@ -94,41 +96,45 @@ em{font-style:italic}
    è il colore del marchio, non un accento aggiunto.
    02.10 · su fondo scuro il payoff va in bianco, su fondo chiaro in nero.
    02.8 · l'area di rispetto è 2X: attorno al marchio non entra nient'altro. */
-.marchio{display:inline-block;text-decoration:none;--mk-marchio:var(--giallo);--mk-payoff:var(--bianco)}
+/* 02.10 · sul campo azzurro il marchio va in bianco, che e' l'uso previsto
+   sui fondi colorati; sul campo bianco torna il giallo della declinazione
+   museo con il payoff in nero (04.01). */
+.marchio{display:inline-block;text-decoration:none;--mk-marchio:var(--bianco);--mk-payoff:var(--bianco)}
+.chiaro .marchio,.marchio.su-bianco{--mk-marchio:var(--giallo);--mk-payoff:var(--nero)}
 .marchio .mk{display:block;height:var(--mk-h,2.6rem)}
 .marchio .mk-full{width:calc(var(--mk-h,2.6rem)*2.4619)}   /* 238.36/96.82 */
 .marchio .mk-lett{width:calc(var(--mk-h,2.6rem)*1.0074)}   /* 97.54/96.82  */
 .marchio .mk-solo{width:calc(var(--mk-h,2.6rem)*1.2670)}   /* 97.54/76.98  */
 
-.istituzionale{position:sticky;top:0;z-index:60;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;padding:.7rem 6vw}
+.istituzionale{position:sticky;top:0;z-index:60;background:rgba(0,146,188,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--filo);display:flex;align-items:center;justify-content:space-between;padding:.7rem 6vw}
 /* 02.9 · sotto la riduzione minima il marchio perde leggibilità. Nella testata
    c'è spazio solo per il lettering: payoff e parola "museo" sarebbero alti
    pochi pixel, quindi si usa il solo logotipo — il giallo della declinazione
    resta e il lockup completo sta nell'hero e nel piede. */
 .istituzionale .marchio{--mk-h:1.9rem;margin-right:2rem}
 .istituzionale .menu{display:flex;gap:1.5rem;font-size:.82rem;font-weight:600}
-.istituzionale .menu a{color:var(--su-nero);text-decoration:none;transition:color .2s}
-.istituzionale .menu a:hover{color:var(--giallo)}
+.istituzionale .menu a{color:var(--nero);text-decoration:none;transition:opacity .2s;opacity:.72}
+.istituzionale .menu a:hover{opacity:1}
 @media (max-width:820px){.istituzionale .menu{display:none}}
 
-#rail{position:fixed;left:0;top:0;bottom:0;width:var(--rail-w);z-index:50;pointer-events:none;border-right:1px solid rgba(255,255,255,.1);background:linear-gradient(to right,rgba(0,0,0,.55),transparent)}
-#rail .linea{position:absolute;top:7rem;bottom:7rem;left:50%;width:2px;background:rgba(255,255,255,.14);transform:translateX(-50%)}
-#rail .fill{position:absolute;bottom:7rem;left:50%;width:2px;height:0;background:var(--giallo);transform:translateX(-50%);transition:height .1s linear;box-shadow:0 0 8px rgba(255,163,0,.6)}
-#rail .marker{position:absolute;left:50%;bottom:7rem;width:18px;height:21px;color:var(--giallo);transform:translate(-50%,50%);transition:bottom .1s linear;filter:drop-shadow(0 0 5px rgba(255,163,0,.7))}
-#rail .quota{position:absolute;left:50%;bottom:7rem;transform:translate(-50%,calc(50% - 26px));font-family:var(--testo);font-weight:700;font-size:.68rem;color:var(--giallo);white-space:nowrap;background:var(--nero);padding:.1rem .35rem;border:1px solid rgba(255,163,0,.4);border-radius:3px;transition:bottom .1s linear}
-#rail .tacca{position:absolute;left:50%;width:8px;height:2px;background:rgba(255,255,255,.3);transform:translateX(-50%)}
+#rail{position:fixed;left:0;top:0;bottom:0;width:var(--rail-w);z-index:50;pointer-events:none;border-right:1px solid var(--filo);background:linear-gradient(to right,rgba(0,0,0,.14),transparent)}
+#rail .linea{position:absolute;top:7rem;bottom:7rem;left:50%;width:2px;background:rgba(0,0,0,.22);transform:translateX(-50%)}
+#rail .fill{position:absolute;bottom:7rem;left:50%;width:2px;height:0;background:var(--giallo);transform:translateX(-50%);transition:height .1s linear}
+#rail .marker{position:absolute;left:50%;bottom:7rem;width:18px;height:21px;color:var(--giallo);transform:translate(-50%,50%);transition:bottom .1s linear}
+#rail .quota{position:absolute;left:50%;bottom:7rem;transform:translate(-50%,calc(50% - 26px));font-family:var(--testo);font-weight:700;font-size:.68rem;color:var(--giallo);white-space:nowrap;background:var(--nero);padding:.1rem .35rem;border-radius:3px;transition:bottom .1s linear}
+#rail .tacca{position:absolute;left:50%;width:8px;height:2px;background:rgba(0,0,0,.35);transform:translateX(-50%)}
 /* l'etichetta della tacca sporge dal righello sul contenuto: sulle sezioni
    chiare il testo chiaro sparirebbe, quindi viaggia su una pastiglia scura
    come la quota, e si legge su qualsiasi fondo */
-#rail .tacca span{position:absolute;left:10px;top:-.62em;font-family:var(--testo);font-size:.58rem;font-weight:600;color:rgba(255,255,255,.72);white-space:nowrap;background:rgba(0,0,0,.82);padding:.14em .4em;border-radius:3px;backdrop-filter:blur(4px)}
+#rail .tacca span{position:absolute;left:10px;top:-.62em;font-family:var(--testo);font-size:.58rem;font-weight:600;color:var(--bianco);white-space:nowrap;background:rgba(0,0,0,.78);padding:.14em .4em;border-radius:3px;backdrop-filter:blur(4px)}
 main{margin-left:var(--rail-w)}
 
 /* HERO */
 #hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
 #hero .testa{position:relative;z-index:2;padding:0 6vw 1.5rem}
 #hero .marchio{--mk-h:clamp(4.2rem,11vw,8.6rem)}
-#hero .luogo{font-size:.8rem;font-weight:600;letter-spacing:.16em;color:var(--su-nero);margin-bottom:1.6rem;text-transform:uppercase}
-#hero .claim{max-width:42ch;margin-top:1.6rem;font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:300;color:rgba(255,255,255,.9)}
+#hero .luogo{font-size:.8rem;font-weight:600;letter-spacing:.16em;color:var(--testo-2);margin-bottom:1.6rem;text-transform:uppercase}
+#hero .claim{max-width:42ch;margin-top:1.6rem;font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:400;color:var(--nero)}
 #hero .invito{margin-top:2.4rem;display:inline-flex;align-items:center;gap:.7rem;background:var(--giallo);color:var(--nero);font-weight:700;font-size:.92rem;text-decoration:none;padding:.85rem 1.5rem;border-radius:99px;transition:transform .2s,box-shadow .2s}
 #hero .invito:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,163,0,.3)}
 #hero .invito .fr{animation:giu 2s ease-in-out infinite}
@@ -141,36 +147,27 @@ section{padding:6.5rem 6vw}
 /* I campi si alternano, nero e bianco, senza sfumature: è il ritmo delle
    tavole del brand book. Il default della pagina è il campo nero; .chiaro
    ribalta tutto quello che va ribaltato. */
-#hero,#religioso,#tresd{background:var(--nero)}
-.chiaro{background:var(--bianco);color:var(--nero)}
-.chiaro p{color:var(--nero)}
-.chiaro a{color:var(--azzurro)}
-/* sul bianco il giallo non regge il contrasto: il testo passa al nero e
-   l'accento resta nel filetto, in azzurro istituzionale */
-.chiaro .eyebrow{color:var(--nero)}
+#hero,#religioso,#tresd{background:var(--azzurro)}
+.chiaro{background:var(--bianco)}
+/* sul campo bianco il filetto dell'occhiello passa all'azzurro: il giallo
+   servirebbe a poco sul bianco, l'azzurro sul proprio campo sparirebbe */
 .chiaro .eyebrow::before{background:var(--azzurro)}
-.chiaro .dida{color:var(--su-bianco)}
-.chiaro .viewer,.chiaro .video-cornice,.chiaro .mappa-cont{border-color:var(--filo-scuro);box-shadow:0 10px 28px rgba(0,0,0,.10)}
-.chiaro .tappe a{color:var(--nero);border-color:var(--filo-scuro)}
-.chiaro .tappe a:hover{background:rgba(0,0,0,.04)}
-.chiaro .tappe b{color:var(--azzurro)}
-.chiaro .tappe span{color:var(--su-bianco)}
-.chiaro .dot{color:var(--azzurro)}
+.chiaro .viewer,.chiaro .video-cornice,.chiaro .mappa-cont{box-shadow:0 10px 28px rgba(0,0,0,.10)}
 
 /* mappa */
-.mappa-cont{margin-top:2.2rem;border:1px solid var(--filo-chiaro);border-radius:10px;overflow:hidden;background:var(--nero);aspect-ratio:16/9;min-height:340px}
+.mappa-cont{margin-top:2.2rem;border:1px solid var(--filo);border-radius:10px;overflow:hidden;background:var(--nero);aspect-ratio:16/9;min-height:340px}
 .mappa-cont iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.9)}
 /* le tre tappe, che prima erano i nodi disegnati sulla mappa */
 .tappe{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem;margin-top:1.2rem}
-.tappe a{display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;align-items:baseline;text-decoration:none;color:var(--bianco);border:1px solid rgba(255,255,255,.14);border-left:3px solid var(--giallo);border-radius:8px;padding:.8rem 1rem;font-size:.86rem;font-weight:600;transition:background .2s,transform .2s}
-.tappe a:hover{background:rgba(255,255,255,.05);transform:translateY(-2px)}
-.tappe b{color:var(--giallo);font-weight:800}
-.tappe span{grid-column:2;display:block;font-weight:500;font-size:.78rem;color:var(--su-nero);margin-top:.15rem}
+.tappe a{display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;align-items:baseline;text-decoration:none;color:var(--nero);border:1px solid var(--filo);border-left:3px solid var(--azzurro);border-radius:8px;padding:.8rem 1rem;font-size:.86rem;font-weight:600;transition:background .2s,transform .2s}
+.tappe a:hover{background:rgba(0,146,188,.08);transform:translateY(-2px)}
+.tappe b{color:var(--azzurro);font-weight:800}
+.tappe span{grid-column:2;display:block;font-weight:500;font-size:.78rem;color:var(--testo-2);margin-top:.15rem}
 .tappe .dot{grid-row:span 2;align-self:center}
-.dot{width:11px;height:13px;color:var(--giallo)}
+.dot{width:11px;height:13px;color:var(--azzurro)}
 
 /* viewer */
-.viewer{margin:2rem 0 .8rem;position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.16);background:#000;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.viewer{margin:2rem 0 .8rem;position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--filo);background:var(--azzurro);box-shadow:0 12px 32px rgba(0,0,0,.18)}
 .viewer .tag{position:absolute;top:0;left:0;z-index:5;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--giallo);color:var(--nero);padding:.45rem .8rem;border-bottom-right-radius:8px}
 /* tutti i 360 hanno la stessa finestra, quella del più ampio (la vetta) */
 .pano{width:100%;height:70vh;min-height:440px}
@@ -178,7 +175,7 @@ section{padding:6.5rem 6vw}
 #viewer3d:active{cursor:grabbing}
 /* zoom del 3D: rotella e pinch, più due pulsanti per chi non ha la rotella */
 .viewer .zoom{position:absolute;right:.7rem;bottom:.7rem;z-index:6;display:flex;flex-direction:column;gap:.35rem}
-.viewer .zoom button{width:34px;height:34px;padding:0;border:1px solid rgba(255,255,255,.25);border-radius:7px;background:rgba(0,0,0,.72);color:var(--bianco);font-family:var(--display);font-weight:800;font-size:1.15rem;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s,color .2s,border-color .2s}
+.viewer .zoom button{width:34px;height:34px;padding:0;border:1px solid rgba(0,0,0,.25);border-radius:7px;background:rgba(0,0,0,.72);color:var(--bianco);font-family:var(--display);font-weight:800;font-size:1.15rem;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s,color .2s,border-color .2s}
 .viewer .zoom button:hover{background:var(--giallo);color:var(--nero);border-color:var(--giallo)}
 .viewer .zoom button svg{width:15px;height:15px;margin:0 auto}
 /* a schermo intero il riquadro e il canvas prendono tutto lo spazio */
@@ -187,63 +184,61 @@ section{padding:6.5rem 6vw}
 /* i 360 non zoomano più con la rotella (la pagina deve poter scorrere anche
    con il puntatore sopra il panorama): restano i pulsanti di pannellum,
    spostati in basso a destra perché in alto a sinistra c'è l'etichetta */
-.viewer .pnlm-container{background:var(--nero)}
+.viewer .pnlm-container{background:var(--azzurro)}
 .viewer .pnlm-controls-container{top:auto;bottom:.7rem;left:auto;right:.7rem}
-.viewer .pnlm-controls{margin-top:0;background-color:rgba(255,255,255,.92);border-color:rgba(0,0,0,.45)}
+.viewer .pnlm-controls{margin-top:0;background-color:rgba(255,255,255,.94);border-color:rgba(0,0,0,.35)}
 /* stato di caricamento del modello 3D (2 MB): si rimuove da solo a fine load */
-.viewer .caric{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;pointer-events:none;background:var(--nero)}
-.viewer .caric .pct{font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--giallo)}
-.viewer .caric .txt{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--su-nero)}
-.viewer .caric .err{font-size:.82rem;font-weight:500;line-height:1.65;color:var(--su-nero);text-align:center;max-width:46ch;padding:0 1.5rem}
-.viewer .caric .err code{font-size:.9em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:.05em .35em;border-radius:4px;color:var(--giallo);font-weight:600}
-.viewer .caric .err em{color:var(--bianco);font-style:italic}
-.dida{font-size:.78rem;font-weight:500;color:var(--su-nero);max-width:none}
+.viewer .caric{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;pointer-events:none;background:var(--azzurro)}
+.viewer .caric .pct{font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--bianco)}
+.viewer .caric .txt{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--nero)}
+.viewer .caric .err{font-size:.82rem;font-weight:500;line-height:1.65;color:var(--nero);text-align:center;max-width:46ch;padding:0 1.5rem}
+.viewer .caric .err code{font-size:.9em;background:rgba(255,255,255,.22);border:1px solid rgba(0,0,0,.2);padding:.05em .35em;border-radius:4px;color:var(--nero);font-weight:600}
+.viewer .caric .err em{color:var(--nero);font-style:italic}
+.dida{font-size:.78rem;font-weight:500;color:var(--testo-2);max-width:none}
 /* riga di credito in coda alla didascalia; dove è ancora fra parentesi quadre
    il credito è da accertare (le due riprese d'archivio) */
 .dida .credito{opacity:.72;font-style:italic}
 
 /* blocco video */
-.video-cornice{margin:2rem 0 .8rem;position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.16);background:#000;aspect-ratio:16/9;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.video-cornice{margin:2rem 0 .8rem;position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--filo);background:#000;aspect-ratio:16/9;box-shadow:0 12px 32px rgba(0,0,0,.18)}
 .video-cornice .tag{position:absolute;top:0;left:0;z-index:5;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--giallo);color:var(--nero);padding:.45rem .8rem;border-bottom-right-radius:8px}
 .video-cornice iframe,.video-cornice video{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;object-fit:cover}
 .video-cornice .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;text-align:center;padding:1.5rem;background:var(--nero)}
 .video-cornice .ph .play{width:72px;height:72px;border-radius:50%;background:var(--giallo);color:var(--nero);display:flex;align-items:center;justify-content:center;font-size:1.5rem}
-.video-cornice .ph .txt{font-size:.8rem;font-weight:600;letter-spacing:.02em;color:var(--su-nero);max-width:42ch;line-height:1.5}
-.video-cornice .ph .txt b{color:var(--giallo)}
+.video-cornice .ph .txt{font-size:.8rem;font-weight:600;letter-spacing:.02em;color:var(--nero);max-width:42ch;line-height:1.5}
+.video-cornice .ph .txt b{color:var(--nero)}
 
 /* schede */
 .schede{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:1.2rem;margin-top:2.4rem}
-.scheda{border:1px solid rgba(255,255,255,.14);border-top:3px solid var(--giallo);border-radius:10px;padding:1.4rem 1.5rem;background:rgba(255,255,255,.04);transition:transform .25s,box-shadow .25s}
-.scheda:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.25)}
+.scheda{border:1px solid var(--filo);border-top:3px solid var(--giallo);border-radius:10px;padding:1.4rem 1.5rem;background:rgba(255,255,255,.22);transition:transform .25s,box-shadow .25s}
+.scheda:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.15)}
 .scheda .casetta{width:20px;height:23px;margin-bottom:.9rem;color:var(--giallo)}
-.scheda .quando{font-size:.72rem;font-weight:700;letter-spacing:.1em;margin-bottom:.5rem;color:var(--giallo)}
-.scheda p{font-size:.92rem;margin:0;color:rgba(255,255,255,.85)}
-
-#tresd .eyebrow{color:var(--giallo)}
+.scheda .quando{font-size:.72rem;font-weight:700;letter-spacing:.1em;margin-bottom:.5rem;color:var(--nero)}
+.scheda p{font-size:.92rem;margin:0;color:var(--testo-2)}
 
 /* vetta */
 #cervati{display:flex;align-items:center;min-height:auto;padding-bottom:3rem}
 #cervati .quota-big{font-family:var(--display);font-weight:900;font-size:clamp(3.5rem,11vw,8rem);line-height:.9;letter-spacing:-.02em;color:var(--azzurro)}
-#cervati .quota-big small{display:block;font-size:.15em;font-weight:700;letter-spacing:.22em;color:var(--su-bianco);margin-top:1rem}
+#cervati .quota-big small{display:block;font-size:.15em;font-weight:700;letter-spacing:.22em;color:var(--testo-2);margin-top:1rem}
 
 /* Le case del brand book chiudono la luce dell'alba in cui finisce la salita e
    il piede comincia sotto di loro: nessuna fascia scura sopra le case, e le
    sagome restano alle proporzioni del pattern, mai stirate.
    margin-left come <main>, così le case non finiscono sotto il righello delle
    quote, che resta la colonna di sinistra. */
-footer{margin-left:var(--rail-w);background:var(--bianco);color:var(--bianco);position:relative;overflow:hidden}
+footer{margin-left:var(--rail-w);background:var(--bianco);color:var(--nero);position:relative;overflow:hidden}
 footer .skyf{width:100%;height:auto;display:block}
-footer .piede{background:var(--nero)}
+footer .piede{background:var(--azzurro)}
 footer .piede{padding:2.6rem 6vw 3rem;display:grid;grid-template-columns:1.3fr 1fr;gap:2rem;align-items:end}
 @media (max-width:760px){footer .piede{grid-template-columns:1fr}}
 /* 02.8 · area di rispetto: il marchio del piede sta staccato dallo skyline */
 footer .marchio{--mk-h:3.2rem}
 footer .contatti{font-size:.84rem;font-weight:600;line-height:1.8;margin-top:1.1rem}
-footer .contatti a{color:var(--giallo)}
-footer .hash{font-weight:800;color:var(--giallo)}
-footer .credits{font-size:.66rem;font-weight:500;color:var(--su-nero);line-height:1.7;text-align:right}
+footer .contatti a{color:var(--nero)}
+footer .hash{font-weight:800;color:var(--nero)}
+footer .credits{font-size:.66rem;font-weight:500;color:var(--testo-2);line-height:1.7;text-align:right}
 @media (max-width:760px){footer .credits{text-align:left}}
-footer .credits strong{color:var(--bianco)}
+footer .credits strong{color:var(--nero)}
 
 :focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
 </style>
@@ -466,7 +461,7 @@ function skyline(svg,moduli,fill,cut,accenti,coda){
   svg.setAttribute('viewBox',`0 0 ${moduli*W} ${H+ext}`);
   svg.innerHTML=parts;
 }
-skyline(document.getElementById('skyHero'),3,'#FFFFFF','#000000',{2:'#FFA300',9:'#FFA300',15:'#FFA300'});
+skyline(document.getElementById('skyHero'),3,'#FFFFFF','#0092BC',{2:'#FFA300',9:'#FFA300',15:'#FFA300'});
 skyline(document.getElementById('skyFoot'),3,'#0092BC','#FFFFFF',{2:'#FFA300',8:'#FFA300',15:'#FFA300'});
 
 /* ============================================================
@@ -568,7 +563,7 @@ function initThree(){if(tre||typeof THREE==='undefined')return;tre=true;
   const canvas=document.getElementById('viewer3d'),stato=document.getElementById('caric3d');
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
   renderer.outputEncoding=THREE.sRGBEncoding;      // le texture del rilievo sono sRGB
-  const scena=new THREE.Scene();scena.background=new THREE.Color(0x000000);
+  const scena=new THREE.Scene();scena.background=new THREE.Color(0x0092BC);
   const camera=new THREE.PerspectiveCamera(40,2,0.01,100);
   /* niente piano di terra né nebbia: la statua porta il proprio basamento
      e resta isolata su fondo neutro, come un oggetto in vetrina. */
