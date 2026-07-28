@@ -63,10 +63,13 @@ Nessun backend. È pubblicato con **GitHub Pages** dal branch `main`, root del r
   chiaro (02.10). Nella testata si usa il solo logotipo perché alle dimensioni della
   barra payoff e "museo" scenderebbero sotto la leggibilità (02.9).
 - **Palette**: solo i colori del brand book — giallo museo `#FFA300` (137 C), azzurro
-  istituzionale `#0092BC` (313 C), nero/bianco e i neutri di fondo. Niente varianti
-  inventate del giallo: dove il giallo non regge il contrasto (la sezione chiara della
-  vetta) si passa ai colori istituzionali, nero per i testi piccoli e azzurro per la
-  quota grande.
+  istituzionale `#0092BC` (313 C), nero e bianco. Le uniche altre tinte sono
+  trasparenze di bianco su nero e di nero su bianco per testi secondari e filetti, non
+  nuovi colori. Non c'è più la progressione notte→alba fra le sezioni: i campi
+  **si alternano nero e bianco** (`.chiaro`) come le tavole del brand book, senza
+  sfumature. Sul bianco il giallo non regge il contrasto, quindi lì i testi passano al
+  nero e l'accento grafico all'azzurro (filetto dell'occhiello, quota 1898, case del
+  piede).
 - **Pittogramma casa**: la casetta del righello, dei nodi della mappa, della legenda e
   delle schede è la **A del marchio**, con la porticina ad arco — lo stesso tracciato del
   `<symbol>` `#casa`, applicato come maschera CSS così prende il colore da `currentColor`.
