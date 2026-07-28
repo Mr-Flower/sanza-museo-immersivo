@@ -50,15 +50,24 @@ Nessun backend. È pubblicato con **GitHub Pages** dal branch `main`, root del r
 
 ## Note tecniche non ovvie
 
-- **Marchio**: è quello ufficiale, estratto in vettoriale dal PDF del brand book
-  (tavole 02.1–02.5); lettering e payoff sono i tracciati originali in Divenire già
-  convertiti in curve. Sta nei `<symbol>` `#mk-lettering` e `#mk-marchio` a inizio
-  `<body>`, si colora dall'esterno con `--mk-lettering` / `--mk-payoff`, e in
-  `assets/logo/` ci sono le copie autonome. Su fondo scuro va in bianco (02.10) e
-  **non** va colorato di giallo: 02.14 vieta i colori fuori palette istituzionale.
-- **Palette**: giallo museo `#FFA300` (Pantone 137 C) da brand book 04.01, usato per la
-  declinazione e gli accenti. L'azzurro istituzionale `#0092BC` (Pantone 313 C) è la
-  versione del marchio su fondo chiaro.
+- **Marchio**: è quello ufficiale nella **declinazione museo** (brand book 04.01),
+  estratto in vettoriale dal PDF: lettering, parola "museo" e payoff sono i tracciati
+  originali in Divenire già convertiti in curve, nelle proporzioni del lockup (02.7).
+  Sta nei `<symbol>` `#mk-museo` (lockup intero), `#mk-museo-lett` (senza payoff) e
+  `#mk-lettering` (solo logotipo) a inizio `<body>`; il colore si passa dall'esterno con
+  `--mk-marchio` / `--mk-payoff`. Copie autonome in `assets/logo/`.
+  Il marchio museo **è giallo** `#FFA300` — non è un accento aggiunto, è la
+  declinazione cromatica prevista. Il payoff segue il fondo: bianco su scuro, nero su
+  chiaro (02.10). Nella testata si usa il solo logotipo perché alle dimensioni della
+  barra payoff e "museo" scenderebbero sotto la leggibilità (02.9).
+- **Palette**: solo i colori del brand book — giallo museo `#FFA300` (137 C), azzurro
+  istituzionale `#0092BC` (313 C), nero/bianco e i neutri di fondo. Niente varianti
+  inventate del giallo: dove il giallo non regge il contrasto (la sezione chiara della
+  vetta) si passa ai colori istituzionali, nero per i testi piccoli e azzurro per la
+  quota grande.
+- **Pittogramma casa**: la casetta del righello, dei nodi della mappa, della legenda e
+  delle schede è la **A del marchio**, con la porticina ad arco — lo stesso tracciato del
+  `<symbol>` `#casa`, applicato come maschera CSS così prende il colore da `currentColor`.
 - **Rotella del mouse**: i 360 hanno `mouseZoom:false` e si aprono a `hfov 120` (il
   massimo di pannellum), così il puntatore che passa sopra un panorama non ruba lo
   scroll alla pagina; per avvicinarsi ci sono i pulsanti `+/−`. Il 3D invece zooma con
