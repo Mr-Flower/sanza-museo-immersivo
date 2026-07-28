@@ -196,8 +196,19 @@ section{padding:clamp(4rem,9vw,6.5rem) var(--margine)}
 #cervati .viewer,#cervati .video-cornice{border-color:rgba(29,42,48,.18)}
 
 /* mappa */
-.mappa-cont{margin-top:2.2rem;border:1px solid rgba(245,247,244,.14);border-radius:10px;overflow:hidden;background:var(--notte-2);aspect-ratio:16/9;min-height:340px}
+.mappa-cont{position:relative;margin-top:2.2rem;border:1px solid rgba(245,247,244,.14);border-radius:10px;overflow:hidden;background:var(--notte-2);aspect-ratio:16/9;min-height:340px}
 .mappa-cont iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.9)}
+/* Sul telefono il 16/9 diventa una feritoia larga e bassa, con la mappa
+   illeggibile: il riquadro si alza. E il trascinamento a un dito dentro la
+   mappa ruberebbe lo scorrimento alla pagina, come facevano i 360 prima di
+   mouseZoom:false, quindi la mappa resta inattiva finché non la si tocca. */
+.attiva-mappa{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-end;justify-content:center;padding:1.1rem;border:0;background:rgba(12,26,33,.28);color:var(--neve);font-family:var(--testo);font-size:.82rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.attiva-mappa span{background:rgba(12,26,33,.86);border:1px solid rgba(245,247,244,.2);border-radius:99px;padding:.55rem 1.1rem;backdrop-filter:blur(6px)}
+.mappa-cont.attiva .attiva-mappa{display:none}
+@media (hover:hover) and (pointer:fine){.attiva-mappa{display:none}}
+@media (max-width:700px){
+  .mappa-cont{aspect-ratio:3/4;min-height:0;max-height:78vh}
+}
 /* le tre tappe, che prima erano i nodi disegnati sulla mappa */
 .tappe{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem;margin-top:1.2rem}
 .tappe a{display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;align-items:baseline;text-decoration:none;color:var(--neve);border:1px solid rgba(245,247,244,.14);border-left:3px solid var(--giallo);border-radius:8px;padding:.8rem 1rem;font-size:.86rem;font-weight:600;transition:background .2s,transform .2s}
@@ -350,8 +361,9 @@ footer .credits strong{color:var(--neve)}
     <div class="eyebrow rivela">La salita</div>
     <h2 class="rivela">Dal borgo alla vetta più alta della Campania</h2>
     <p class="lede rivela">Tre tappe lungo il cammino della Madonna della Neve: Sanza, dove la salita comincia; Vallevona, l'altopiano carsico a metà strada; la vetta del Cervati, con il suo santuario. A ogni tappa, un panorama immersivo a 360°.</p>
-    <div class="mappa-cont rivela">
+    <div class="mappa-cont rivela" id="mappa-cont">
       <iframe title="Mappa: da Sanza al Monte Cervati" src="https://www.google.com/maps?ll=40.2795,15.5085&amp;z=12&amp;t=p&amp;hl=it&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <button class="attiva-mappa" type="button"><span>Tocca per muovere la mappa</span></button>
     </div>
     <ul class="tappe rivela">
       <li><a href="#religioso"><i class="dot casa"></i><b>Sanza</b> · 558 m<span>la Chiesa Madre, dove la salita comincia</span></a></li>
@@ -562,6 +574,12 @@ skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:
   menu.addEventListener('click',e=>{if(e.target.tagName==='A')chiudi();});
   document.addEventListener('click',e=>{if(!testata.contains(e.target))chiudi();});
   addEventListener('keydown',e=>{if(e.key==='Escape')chiudi();});
+})();
+
+/* la mappa si attiva al tocco: prima il dito scorre la pagina */
+(function(){
+  const box=document.getElementById('mappa-cont'),b=box&&box.querySelector('.attiva-mappa');
+  if(b)b.addEventListener('click',()=>box.classList.add('attiva'));
 })();
 
 /* ============================================================
