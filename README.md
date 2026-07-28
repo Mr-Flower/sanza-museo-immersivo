@@ -34,8 +34,10 @@ Nessun backend. È pubblicato con **GitHub Pages** dal branch `main`, root del r
 
 ## Da completare prima di pubblicare
 
-- **Crediti**: le didascalie di video, panorami e rilievo 3D riportano `[da completare]`.
-  Vanno accertati autore, anno e detentore dei diritti — è materiale d'archivio.
+- **Crediti**: panorami 360° e rilievo 3D sono accreditati al **Centro ICT per i Beni
+  Culturali — Università degli Studi di Salerno**, 2026, che ne detiene i diritti.
+  I **due video d'archivio** provengono da **TeleCervati**; restano da accertare
+  l'anno delle riprese e il detentore dei diritti, e le loro didascalie lo dichiarano.
 - **Panorama mancante**: la partenza notturna dalla Chiesa Madre non ha ancora una
   ripresa reale. Il visore che mostrava un placeholder procedurale è stato tolto:
   quando la ripresa arriverà, si rimette con lo stesso schema degli altri quattro.
