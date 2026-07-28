@@ -159,7 +159,9 @@ main{margin-left:var(--rail-w)}
    la barra del browser che scompare allo scroll. */
 #hero{position:relative;min-height:calc(100vh - var(--testata-h,56px));min-height:calc(100svh - var(--testata-h,56px));display:grid;grid-template-rows:1fr auto;overflow:hidden;padding:0;background:radial-gradient(ellipse 80% 50% at 70% 110%, rgba(43,65,80,.5), transparent 60%), var(--notte)}
 #cielo-hero{position:absolute;inset:0;width:100%;height:100%}
-#hero .testa{position:relative;z-index:2;align-self:center;width:100%;max-width:1180px;padding:clamp(1.5rem,5vh,3.5rem) var(--margine)}
+/* stessa colonna del testo delle sezioni: .sez e' larga 1010px e centrata
+   dentro il margine, quindi qui la scatola vale 1010 piu' i due margini */
+#hero .testa{position:relative;z-index:2;align-self:center;width:100%;max-width:calc(1010px + var(--margine)*2);margin-inline:auto;padding:clamp(1.5rem,5vh,3.5rem) var(--margine)}
 #hero .marchio{--mk-h:clamp(4rem,19vw,10rem)}
 #hero .luogo{font-size:clamp(.7rem,1.5vw,.88rem);font-weight:600;letter-spacing:.2em;color:var(--pietra);margin-bottom:clamp(1.1rem,2.8vh,1.9rem);text-transform:uppercase}
 #hero .claim{max-width:34ch;margin-top:clamp(1.3rem,3.2vh,2.2rem);font-size:clamp(1.08rem,2.1vw,1.7rem);font-weight:300;line-height:1.42;letter-spacing:-.005em;color:rgba(245,247,244,.92)}
