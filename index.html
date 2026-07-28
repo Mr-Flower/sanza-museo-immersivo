@@ -111,7 +111,10 @@ em{font-style:italic}
 #rail .marker{position:absolute;left:50%;bottom:7rem;width:18px;height:21px;color:var(--giallo);transform:translate(-50%,50%);transition:bottom .1s linear;filter:drop-shadow(0 0 5px rgba(255,163,0,.7))}
 #rail .quota{position:absolute;left:50%;bottom:7rem;transform:translate(-50%,calc(50% - 26px));font-family:var(--testo);font-weight:700;font-size:.68rem;color:var(--giallo);white-space:nowrap;background:var(--notte);padding:.1rem .35rem;border:1px solid rgba(255,163,0,.4);border-radius:3px;transition:bottom .1s linear}
 #rail .tacca{position:absolute;left:50%;width:8px;height:2px;background:rgba(245,247,244,.3);transform:translateX(-50%)}
-#rail .tacca span{position:absolute;left:12px;top:-.55em;font-family:var(--testo);font-size:.58rem;font-weight:600;color:rgba(245,247,244,.45);white-space:nowrap}
+/* l'etichetta della tacca sporge dal righello sul contenuto: sulle sezioni
+   chiare il testo chiaro sparirebbe, quindi viaggia su una pastiglia scura
+   come la quota, e si legge su qualsiasi fondo */
+#rail .tacca span{position:absolute;left:10px;top:-.62em;font-family:var(--testo);font-size:.58rem;font-weight:600;color:rgba(245,247,244,.72);white-space:nowrap;background:rgba(12,26,33,.82);padding:.14em .4em;border-radius:3px;backdrop-filter:blur(4px)}
 main{margin-left:var(--rail-w)}
 
 /* HERO */
