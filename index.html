@@ -125,7 +125,7 @@ main{margin-left:var(--rail-w)}
 #hero .invito:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,163,0,.3)}
 #hero .invito .fr{animation:giu 2s ease-in-out infinite}
 @keyframes giu{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
-#hero .skyline{position:relative;z-index:2;width:100%;height:auto;margin-top:1.5rem}
+#hero .skyline{position:relative;z-index:2;display:block;width:calc(100% + 12vw);margin:1.5rem -6vw 0;height:auto}
 
 section{padding:6.5rem 6vw}
 .sez{max-width:1010px;margin:0 auto}
@@ -145,8 +145,15 @@ section{padding:6.5rem 6vw}
 #cervati .viewer,#cervati .video-cornice{border-color:rgba(29,42,48,.18)}
 
 /* mappa */
-.mappa-cont{margin-top:2.2rem;border:1px solid rgba(245,247,244,.14);border-radius:10px;overflow:hidden;background:var(--notte-2)}
-.mappa-cont svg{width:100%;height:auto}
+.mappa-cont{margin-top:2.2rem;border:1px solid rgba(245,247,244,.14);border-radius:10px;overflow:hidden;background:var(--notte-2);aspect-ratio:16/9;min-height:340px}
+.mappa-cont iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.9)}
+/* le tre tappe, che prima erano i nodi disegnati sulla mappa */
+.tappe{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem;margin-top:1.2rem}
+.tappe a{display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;align-items:baseline;text-decoration:none;color:var(--neve);border:1px solid rgba(245,247,244,.14);border-left:3px solid var(--giallo);border-radius:8px;padding:.8rem 1rem;font-size:.86rem;font-weight:600;transition:background .2s,transform .2s}
+.tappe a:hover{background:rgba(245,247,244,.05);transform:translateY(-2px)}
+.tappe b{color:var(--giallo);font-weight:800}
+.tappe span{grid-column:2;display:block;font-weight:500;font-size:.78rem;color:var(--pietra);margin-top:.15rem}
+.tappe .dot{grid-row:span 2;align-self:center}
 .nodo{cursor:pointer}
 .nodo .alone{fill:var(--giallo);opacity:0;transition:opacity .25s}
 .nodo:hover .alone,.nodo:focus .alone{opacity:.2}
@@ -167,6 +174,10 @@ section{padding:6.5rem 6vw}
 .viewer .zoom{position:absolute;right:.7rem;bottom:.7rem;z-index:6;display:flex;flex-direction:column;gap:.35rem}
 .viewer .zoom button{width:34px;height:34px;padding:0;border:1px solid rgba(245,247,244,.25);border-radius:7px;background:rgba(12,26,33,.72);color:var(--neve);font-family:var(--display);font-weight:800;font-size:1.15rem;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s,color .2s,border-color .2s}
 .viewer .zoom button:hover{background:var(--giallo);color:var(--notte);border-color:var(--giallo)}
+.viewer .zoom button svg{width:15px;height:15px;margin:0 auto}
+/* a schermo intero il riquadro e il canvas prendono tutto lo spazio */
+.viewer:fullscreen{border-radius:0;border:0;display:flex;align-items:center;justify-content:center}
+.viewer:fullscreen #viewer3d{width:100vw;height:100vh}
 /* i 360 non zoomano più con la rotella (la pagina deve poter scorrere anche
    con il puntatore sopra il panorama): restano i pulsanti di pannellum,
    spostati in basso a destra perché in alto a sinistra c'è l'etichetta */
@@ -203,17 +214,22 @@ section{padding:6.5rem 6vw}
 #tresd .eyebrow{color:var(--giallo)}
 
 /* vetta */
-#cervati{display:flex;align-items:center;min-height:auto}
+#cervati{display:flex;align-items:center;min-height:auto;padding-bottom:3rem}
 #cervati .quota-big{font-family:var(--display);font-weight:900;font-size:clamp(3.5rem,11vw,8rem);line-height:.9;letter-spacing:-.02em;color:var(--azzurro)}
 #cervati .quota-big small{display:block;font-size:.15em;font-weight:700;letter-spacing:.22em;color:#6b7a80;margin-top:1rem}
 
-footer{background:var(--inchiostro);color:var(--neve);position:relative;overflow:hidden}
+/* Le case del brand book chiudono la luce dell'alba in cui finisce la salita e
+   il piede comincia sotto di loro: nessuna fascia scura sopra le case, e le
+   sagome restano alle proporzioni del pattern, mai stirate.
+   margin-left come <main>, così le case non finiscono sotto il righello delle
+   quote, che resta la colonna di sinistra. */
+footer{margin-left:var(--rail-w);background:var(--alba-calda);color:var(--neve);position:relative;overflow:hidden}
 footer .skyf{width:100%;height:auto;display:block}
-footer .piede{padding:1.6rem 6vw 3rem;display:grid;grid-template-columns:1.3fr 1fr;gap:2rem;align-items:end}
+footer .piede{background:var(--inchiostro)}
+footer .piede{padding:2.6rem 6vw 3rem;display:grid;grid-template-columns:1.3fr 1fr;gap:2rem;align-items:end}
 @media (max-width:760px){footer .piede{grid-template-columns:1fr}}
 /* 02.8 · area di rispetto: il marchio del piede sta staccato dallo skyline */
 footer .marchio{--mk-h:3.2rem}
-footer .piede{padding-top:2rem}
 footer .contatti{font-size:.84rem;font-weight:600;line-height:1.8;margin-top:1.1rem}
 footer .contatti a{color:var(--giallo)}
 footer .hash{font-weight:800;color:var(--giallo)}
@@ -263,7 +279,7 @@ footer .credits strong{color:var(--neve)}
     <p class="claim">Una montagna sacra, alta 1898 metri. E una notte d'estate, ogni anno da secoli, in cui il paese intero sale a piedi nel buio portando la Madonna della Neve fino in vetta.</p>
     <a class="invito" href="#mappa">Inizia la salita <span class="fr">↓</span></a>
   </div>
-  <svg class="skyline" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true" id="skyHero"></svg>
+  <svg class="skyline" aria-hidden="true" id="skyHero"></svg>
 </section>
 
 <!-- LA SALITA (MAPPA) -->
@@ -273,22 +289,13 @@ footer .credits strong{color:var(--neve)}
     <h2 class="rivela">Dal borgo alla vetta più alta della Campania</h2>
     <p class="lede rivela">Tre tappe lungo il cammino della Madonna della Neve: Sanza, dove la salita comincia; Vallevona, l'altopiano carsico a metà strada; la vetta del Cervati, con il suo santuario. A ogni tappa, un panorama immersivo a 360°.</p>
     <div class="mappa-cont rivela">
-      <svg viewBox="0 0 900 440" role="img" aria-label="La salita da Sanza al Cervati, passando per Vallevona">
-        <defs><linearGradient id="terra" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#142631"/><stop offset="1" stop-color="#21343f"/></linearGradient></defs>
-        <rect width="900" height="440" fill="url(#terra)"/>
-        <g fill="none" stroke="#33505f" stroke-width="1" opacity=".5"><path d="M560,420 C620,330 700,300 760,210 C800,150 810,110 800,70"/><path d="M600,420 C660,340 730,310 790,225 C825,170 835,130 828,95"/><path d="M520,420 C580,325 665,285 725,200 C765,140 775,100 768,55"/></g>
-        <path d="M40,400 C140,380 200,400 290,375 C380,350 430,370 520,345" fill="none" stroke="#3f6a78" stroke-width="2.5"/>
-        <text x="60" y="392" font-family="Hanken Grotesk" font-size="10" fill="#5d8a99">fiume Bussento</text>
-        <path d="M195,310 C300,295 380,255 470,235 C560,215 640,150 745,85" fill="none" stroke="#FFA300" stroke-width="2" stroke-dasharray="6 6" opacity=".85"/>
-        <text x="300" y="250" font-family="Hanken Grotesk" font-weight="600" font-size="10" fill="#FFA300" opacity=".9">sentiero dei marunnari · ~18 km</text>
-        <a class="nodo" href="#religioso" aria-label="Sanza, 558 m"><circle class="alone" cx="195" cy="310" r="20"/><use href="#casa" x="187" y="302" width="16" height="16" fill="#FFA300"/><text x="150" y="342">SANZA · 558 m</text><text class="small" x="124" y="357">Chiesa Madre S.M. Assunta</text></a>
-        <a class="nodo" href="#vallevona" aria-label="Vallevona, ~1500 m"><circle class="alone" cx="470" cy="235" r="19"/><use href="#casa" x="461" y="226" width="18" height="18" fill="#FFA300"/><text x="488" y="232">VALLEVONA · ~1500 m</text><text class="small" x="488" y="247">l'altopiano carsico</text></a>
-        <a class="nodo" href="#cervati" aria-label="Monte Cervati, 1898 m"><circle class="alone" cx="745" cy="85" r="22"/><use href="#casa" x="735" y="74" width="20" height="20" fill="#FFA300"/><text x="600" y="62">MONTE CERVATI · 1898 m</text><text class="small" x="610" y="77">santuario e grotta della Madonna</text></a>
-      </svg>
+      <iframe title="Mappa: da Sanza al Monte Cervati" src="https://www.google.com/maps?ll=40.2795,15.5085&amp;z=12&amp;t=p&amp;hl=it&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </div>
-    <div class="legenda rivela">
-      <span><i class="dot casa"></i> tappe della salita · panorami 360°</span>
-    </div>
+    <ul class="tappe rivela">
+      <li><a href="#religioso"><i class="dot casa"></i><b>Sanza</b> · 558 m<span>la Chiesa Madre, dove la salita comincia</span></a></li>
+      <li><a href="#vallevona"><i class="dot casa"></i><b>Vallevona</b> · ~1500 m<span>l'altopiano carsico, a metà cammino</span></a></li>
+      <li><a href="#cervati"><i class="dot casa"></i><b>Monte Cervati</b> · 1898 m<span>il santuario e la grotta della Madonna</span></a></li>
+    </ul>
   </div>
 </section>
 
@@ -338,10 +345,13 @@ footer .credits strong{color:var(--neve)}
       <div class="zoom">
         <button type="button" id="z3d-piu" aria-label="Avvicina il modello">+</button>
         <button type="button" id="z3d-meno" aria-label="Allontana il modello">−</button>
+        <button type="button" id="z3d-pieno" aria-label="Schermo intero" title="Schermo intero">
+          <svg viewBox="0 0 26 26" aria-hidden="true"><path fill="currentColor" d="M5 8V5h3V3H3v5zm13 0h3V5h-3V3h5v5zM5 18H3v5h5v-2H5zm16 0v3h-3v2h5v-5z"/></svg>
+        </button>
       </div>
       <div class="caric" id="caric3d"><span class="pct">0%</span><span class="txt">caricamento del rilievo</span></div>
     </div>
-    <p class="dida rivela">Trascina per ruotare, rotella o pinch (o i pulsanti +/−) per avvicinarti e allontanarti. È il rilievo fotogrammetrico della statua lignea portata in processione: la Madonna con il Bambino, entrambi incoronati, sul basamento inciso <em>«Io sono la protettrice del popolo di Sanza»</em>. <span class="credito">[da completare: autore del rilievo · anno · ente detentore dei diritti]</span></p>
+    <p class="dida rivela">Trascina per ruotare, i pulsanti +/− o la pinch per avvicinarti, l’ultimo pulsante per lo schermo intero. È il rilievo fotogrammetrico della statua lignea portata in processione: la Madonna con il Bambino, entrambi incoronati, sul basamento inciso <em>«Io sono la protettrice del popolo di Sanza»</em>. <span class="credito">[da completare: autore del rilievo · anno · ente detentore dei diritti]</span></p>
   </div>
 </section>
 
@@ -362,7 +372,7 @@ footer .credits strong{color:var(--neve)}
 </main>
 
 <footer>
-  <svg class="skyf" viewBox="0 0 1200 130" preserveAspectRatio="none" aria-hidden="true" id="skyFoot"></svg>
+  <svg class="skyf" aria-hidden="true" id="skyFoot"></svg>
   <div class="piede">
     <div>
       <span class="marchio" role="img" aria-label="Sanza museo · il borgo dell’accoglienza">
@@ -414,18 +424,43 @@ function montaVideo(id,v){
 montaVideo('video-marunnari',VIDEO_NOTTE);
 montaVideo('video-vetta',VIDEO_VETTA);
 
-/* skyline di casette */
-function skyline(svg,h,fill,cut,accenti){
-  const w=1200,larg=86;let x=4,i=0,parts='';
-  while(x<w+larg){const hh=h*(0.55+0.4*Math.abs(Math.sin(i*1.3)));const top=h-hh,roof=Math.min(34,hh*0.42),bw=larg-14,cx=x+bw/2;
-    parts+=`<path d="M${x} ${h} L${x} ${top+roof} L${cx} ${top} L${x+bw} ${top+roof} L${x+bw} ${h} Z" fill="${accenti[i]||fill}"/>`;
-    if(i%2===0){parts+=`<path d="M${cx-9} ${h} L${cx-9} ${h-20} A9 9 0 0 1 ${cx+9} ${h-20} L${cx+9} ${h} Z" fill="${cut}"/>`;}
-    else{parts+=`<circle cx="${cx}" cy="${top+roof+20}" r="8" fill="${cut}"/><rect x="${cx-7}" y="${h-26}" width="14" height="26" rx="2" fill="${cut}"/>`;}
-    x+=bw;i++;}
+/* ============================================================
+   SKYLINE · sono le case del brand book, non un disegno inventato:
+   la prima fila del pattern della tavola 02.13 ("il pattern deriva
+   dall'estrazione dagli elementi caratteristici del pittogramma con
+   successive declinazioni architettoniche"), estratta in vettoriale dal PDF.
+   Ogni casa ha la sagoma piena e i suoi fori — porta ad arco, porta
+   rettangolare, oculo — ritagliati nel colore del fondo, come nei poster.
+   Il modulo è 514×157 e si ripete: le proporzioni non vengono mai stirate.
+   ============================================================ */
+const CASE=[
+  {s:'M-0.36 156.78L-0.36 71L13.94 56.69L13.94 28.11L42.52 -0.47L71.09 28.11L71.09 56.69L85.4 71L85.4 156.78ZM-0.36 156.78',x:-0.36,w:85.76,f:[{d:'M42.51 56.71C34.62 56.71 28.22 50.31 28.22 42.41C28.22 34.52 34.62 28.12 42.51 28.12C50.41 28.12 56.81 34.52 56.81 42.41C56.81 50.31 50.41 56.71 42.51 56.71ZM42.51 56.71',x:28.22,w:28.59,giu:false},{d:'M56.81 93.88C56.81 85.98 50.41 79.58 42.51 79.58C34.62 79.58 28.22 85.98 28.22 93.88L28.22 156.78L56.81 156.78ZM56.81 93.88',x:28.22,w:28.59,giu:true}]},
+  {s:'M128.29 28.12L85.41 71L85.41 156.78L171.18 156.78L171.18 71ZM128.29 28.12',x:85.41,w:85.77,f:[{d:'M142.59 93.88C142.59 85.98 136.19 79.58 128.29 79.58C120.4 79.58 114 85.98 114 93.88L114 156.78L142.59 156.78ZM142.59 93.88',x:114.00,w:28.59,giu:true}]},
+  {s:'M199.78 42.41L171.18 71L171.18 156.78L256.96 156.78L256.96 71L228.37 42.41ZM199.78 42.41',x:171.18,w:85.78,f:[{d:'M214.07 102.46C204.6 102.46 196.92 94.77 196.92 85.3C196.92 75.83 204.6 68.14 214.07 68.14C223.55 68.14 231.23 75.83 231.23 85.3C231.23 94.77 223.55 102.46 214.07 102.46ZM214.07 102.46',x:196.92,w:34.31,giu:false}]},
+  {s:'M328.43 56.7L328.43 -0.47L299.84 -0.47L299.84 28.12L256.96 71L256.96 156.78L342.72 156.78L342.72 71ZM328.43 56.7',x:256.96,w:85.76,f:[{d:'M314.13 156.78L285.54 156.78L285.54 85.3L314.13 85.3ZM314.13 156.78',x:285.54,w:28.59,giu:true}]},
+  {s:'M385.62 28.12L342.73 71L342.73 156.78L428.5 156.78L428.5 71ZM385.62 28.12',x:342.73,w:85.77,f:[{d:'M399.91 156.78L371.32 156.78L371.32 85.3L399.91 85.3ZM399.91 156.78',x:371.32,w:28.59,giu:true}]},
+  {s:'M446.99 52.52L428.51 71L428.51 156.78L514.28 156.78L514.28 71L495.8 52.52C489.33 46.05 480.55 42.41 471.39 42.41C462.24 42.41 453.46 46.05 446.99 52.52ZM446.99 52.52',x:428.51,w:85.77,f:[{d:'M485.69 156.78L457.1 156.78L457.1 85.3L485.69 85.3ZM485.69 156.78',x:457.10,w:28.59,giu:true}]},
+];
+const BASE=156.78;
+function skyline(svg,moduli,fill,cut,accenti,coda){
+  const W=514,H=156.78,ext=coda||0;let parts='',i=0;
+  for(let t=0;t<moduli;t++)for(const c of CASE){
+    const col=accenti[i]||fill;
+    parts+=`<g transform="translate(${t*W},0)"><path fill="${col}" d="${c.s}"/>`;
+    /* la coda prolunga i muri fino in fondo alla pagina, senza toccare le
+       proporzioni delle sagome: si aggiunge sotto la linea di terra */
+    if(ext)parts+=`<rect x="${c.x}" y="${BASE-1}" width="${c.w}" height="${ext+1}" fill="${col}"/>`;
+    for(const f of c.f){
+      parts+=`<path fill="${cut}" d="${f.d}"/>`;
+      if(ext&&f.giu)parts+=`<rect x="${f.x}" y="${BASE-1}" width="${f.w}" height="${ext+1}" fill="${cut}"/>`;
+    }
+    parts+='</g>';i++;
+  }
+  svg.setAttribute('viewBox',`0 0 ${moduli*W} ${H+ext}`);
   svg.innerHTML=parts;
 }
-skyline(document.getElementById('skyHero'),120,'#f5f7f4','#0c1a21',{3:'#FFA300',7:'#FFA300'});
-skyline(document.getElementById('skyFoot'),130,'#f5f7f4','#1d2a30',{2:'#FFA300',5:'#FFA300',9:'#FFA300'});
+skyline(document.getElementById('skyHero'),3,'#f5f7f4','#0c1a21',{2:'#FFA300',9:'#FFA300',15:'#FFA300'});
+skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:'#FFA300',15:'#FFA300'});
 
 /* cielo del hero: notte stellata + torce gialle */
 (function(){
@@ -530,7 +565,7 @@ const HFOV_APERTO=100;
 function avviaPano(id,file,generatore,hotSpots,opt){
   if(typeof pannellum==='undefined')return;
   pannellum.viewer(id,Object.assign({type:'equirectangular',panorama:file||generatore(),autoLoad:true,autoRotate:-1.5,compass:false,
-    showZoomCtrl:true,mouseZoom:false,hfov:HFOV_APERTO,maxHfov:HFOV_APERTO,hotSpots:hotSpots},opt||{}));
+    showZoomCtrl:true,mouseZoom:false,doubleClickZoom:false,hfov:HFOV_APERTO,maxHfov:HFOV_APERTO,hotSpots:hotSpots},opt||{}));
 }
 function lazy(id,cb){new IntersectionObserver((es,io)=>es.forEach(e=>{if(e.isIntersecting){cb();io.unobserve(e.target);}}),{rootMargin:'200px'}).observe(document.getElementById(id));}
 
@@ -619,7 +654,7 @@ function initThree(){if(tre||typeof THREE==='undefined')return;tre=true;
     if(punti.has(e.pointerId))punti.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(punti.size>1){const d=distPunti();if(pinch&&d)zoom(pinch/d);pinch=d;return;}
     if(!drag)return;
-    ry+=(e.clientX-lx)*0.008;rx=Math.max(-0.1,Math.min(0.9,rx+(e.clientY-ly)*0.005));lx=e.clientX;ly=e.clientY;
+    ry-=(e.clientX-lx)*0.008;rx=Math.max(-0.1,Math.min(0.9,rx-(e.clientY-ly)*0.005));lx=e.clientX;ly=e.clientY;
   });
   ['pointerup','pointercancel'].forEach(t=>canvas.addEventListener(t,e=>{
     punti.delete(e.pointerId);pinch=0;
@@ -627,20 +662,17 @@ function initThree(){if(tre||typeof THREE==='undefined')return;tre=true;
     if(resta.length){drag=true;lx=resta[0].x;ly=resta[0].y;}else drag=false;
   }));
 
-  /* La rotella zooma il modello — ma non mentre la pagina sta scorrendo: se il
-     puntatore finisce sul canvas durante uno scroll, lo scroll prosegue invece
-     di essere catturato (stesso principio dei 360, dove la rotella è disattivata). */
-  let ultimoScroll=0;
-  addEventListener('scroll',()=>{ultimoScroll=performance.now();},{passive:true});
-  canvas.addEventListener('wheel',e=>{
-    if(performance.now()-ultimoScroll<400)return;
-    e.preventDefault();auto=false;
-    const d=e.deltaMode===1?e.deltaY*16:e.deltaMode===2?e.deltaY*400:e.deltaY;
-    zoom(Math.exp(Math.max(-120,Math.min(120,d))*0.0016));
-  },{passive:false});
-  const btnPiu=document.getElementById('z3d-piu'),btnMeno=document.getElementById('z3d-meno');
+  /* Niente zoom con la rotella, esattamente come sui 360: il canvas non deve
+     rubare lo scroll alla pagina. Ci si avvicina con i pulsanti +/- o con la
+     pinch, e si passa a schermo intero con il terzo pulsante. */
+  const btnPiu=document.getElementById('z3d-piu'),btnMeno=document.getElementById('z3d-meno'),btnPieno=document.getElementById('z3d-pieno');
   if(btnPiu)btnPiu.addEventListener('click',()=>{auto=false;zoom(1/1.25);});
   if(btnMeno)btnMeno.addEventListener('click',()=>{auto=false;zoom(1.25);});
+  if(btnPieno)btnPieno.addEventListener('click',()=>{
+    const box=canvas.closest('.viewer');
+    if(document.fullscreenElement)document.exitFullscreen();
+    else if(box.requestFullscreen)box.requestFullscreen();
+  });
 
   function frame(t){if(auto)ry+=0.0022;const r=dist;
     camera.position.set(r*Math.sin(ry)*Math.cos(rx),r*Math.sin(rx),r*Math.cos(ry)*Math.cos(rx));camera.lookAt(0,0,0);
