@@ -495,14 +495,18 @@ function panoCervati(){return panoGiorno({oz:0.46,solex:0.2,cielo:['#cfe2ec','#9
   creste:[[0.5,120,'#9fb6bf'],[0.56,80,'#7c97a3'],[0.62,50,'#5d7783']],terra:['#86977f','#5b6e55'],macchia:['#73876a','#566a4f'],detriti:200});}
 
 /* viewer 360 generico
-   hfov 120 è il massimo consentito da pannellum: i panorami si aprono così
-   alla distanza maggiore, con tutta la scena in campo, e da lì l'utente
-   semmai si avvicina.
+   HFOV_APERTO è l'apertura di partenza, ed è anche il massimo (maxHfov): il
+   panorama si apre già alla distanza maggiore e da lì semmai ci si avvicina.
+   Il valore è 100 e non il 120 massimo di pannellum perché la proiezione è
+   rettilineare: oltre i ~105° le rette ai bordi si incurvano e il paesaggio
+   sembra stirato, tanto più che la finestra è alta 70vh e quindi anche il
+   campo verticale è ampio. 100 è il punto in cui si vede il più possibile
+   senza che l'immagine risulti deformata.
    mouseZoom:false — con la rotella disattivata il puntatore che passa sopra
    un panorama mentre si scorre la pagina non ne cattura più lo scroll: la
    pagina continua a scorrere. Al suo posto compaiono i pulsanti +/− di
    pannellum (showZoomCtrl), e su touch resta la pinch. */
-const HFOV_APERTO=120;
+const HFOV_APERTO=100;
 function avviaPano(id,file,generatore,hotSpots,opt){
   if(typeof pannellum==='undefined')return;
   pannellum.viewer(id,Object.assign({type:'equirectangular',panorama:file||generatore(),autoLoad:true,autoRotate:-1.5,compass:false,
