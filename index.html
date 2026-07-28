@@ -424,12 +424,48 @@ skyline(document.getElementById('skyFoot'),130,'#f5f7f4','#1d2a30',{2:'#FFA300',
   addEventListener('resize',resize);resize();requestAnimationFrame(loop);
 })();
 
-/* rail */
+/* ============================================================
+   RIGHELLO DELLE QUOTE (rail)
+   Il righello resta una scala di metri: le tacche stanno alla loro altezza
+   reale, spaziate in proporzione ai dislivelli. A muoversi in modo non
+   lineare è il marker, perché la quota non si ricava più dalla percentuale
+   di pagina scrollata ma dalle sezioni: l'inizio di ogni sezione con una
+   quota dichiarata coincide con la sua tacca, e fra un ancoraggio e l'altro
+   la quota si interpola. Così l'ultima sezione tocca esattamente i 1898 m.
+   ============================================================ */
 (function(){
   const fill=document.getElementById('fill'),marker=document.getElementById('marker'),quota=document.getElementById('quota'),rail=document.getElementById('rail');
-  [[558,'Sanza'],[1000,'faggeta'],[1500,'Vallevona'],[1898,'Cervati']].forEach(([m,nome])=>{const f=(m-558)/(1898-558),t=document.createElement('div');t.className='tacca';t.style.bottom=`calc(7rem + ${f} * (100% - 14rem))`;t.innerHTML=`<span>${m} · ${nome}</span>`;rail.appendChild(t);});
-  function up(){const max=document.documentElement.scrollHeight-innerHeight,f=max>0?Math.min(1,scrollY/max):0,m=Math.round(558+f*(1898-558));const b=`calc(7rem + ${f} * (100% - 14rem))`;fill.style.height=`calc(${f} * (100% - 14rem))`;marker.style.bottom=b;quota.style.bottom=b;quota.textContent=m+' m';}
-  addEventListener('scroll',up,{passive:true});up();
+  const MIN=558,MAX=1898,frazione=m=>(m-MIN)/(MAX-MIN);
+  [[558,'Sanza'],[1000,'faggeta'],[1500,'Vallevona'],[1898,'Cervati']].forEach(([m,nome])=>{const t=document.createElement('div');t.className='tacca';t.style.bottom=`calc(7rem + ${frazione(m)} * (100% - 14rem))`;t.innerHTML=`<span>${m} · ${nome}</span>`;rail.appendChild(t);});
+
+  /* ancoraggi: sezione → quota che deve leggersi quando la sezione comincia.
+     Il santuario (#tresd) non ha una quota propria dichiarata e resta
+     interpolato fra Vallevona e la vetta. */
+  const ANCORE=[['religioso',558],['vallevona',1500],['cervati',MAX]];
+  let punti=[];
+  function misura(){
+    punti=[[0,MIN]];
+    ANCORE.forEach(([id,m])=>{const el=document.getElementById(id);if(el)punti.push([Math.round(el.getBoundingClientRect().top+scrollY),m]);});
+    punti.sort((a,b)=>a[0]-b[0]);
+  }
+  function quotaDa(y){
+    if(y<=punti[0][0])return punti[0][1];
+    for(let i=1;i<punti.length;i++){
+      const [y0,m0]=punti[i-1],[y1,m1]=punti[i];
+      if(y<=y1)return m0+(m1-m0)*(y-y0)/Math.max(1,y1-y0);
+    }
+    return punti[punti.length-1][1];   // dall'ultima sezione in giù si resta in vetta
+  }
+  function up(){
+    const f=Math.max(0,Math.min(1,frazione(quotaDa(scrollY))));
+    const b=`calc(7rem + ${f} * (100% - 14rem))`;
+    fill.style.height=`calc(${f} * (100% - 14rem))`;marker.style.bottom=b;quota.style.bottom=b;
+    quota.textContent=Math.round(MIN+f*(MAX-MIN))+' m';
+  }
+  addEventListener('scroll',up,{passive:true});
+  addEventListener('resize',()=>{misura();up();});
+  addEventListener('load',()=>{misura();up();});
+  misura();up();
 })();
 
 /* reveal */
