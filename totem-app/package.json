@@ -1,0 +1,42 @@
+{
+  "name": "sanza-museo-totem",
+  "version": "1.0.0",
+  "description": "Sanza · museo immersivo — eseguibile per il totem",
+  "author": "Comune di Sanza",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "exe": "electron-builder --win portable --x64 --publish never"
+  },
+  "build": {
+    "appId": "it.sanza.museo.totem",
+    "productName": "Sanza Museo",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js"
+    ],
+    "extraResources": [
+      {
+        "from": "../index.html",
+        "to": "site/index.html"
+      },
+      {
+        "from": "../assets",
+        "to": "site/assets"
+      }
+    ],
+    "win": {
+      "icon": "../assets/logo/icona.ico"
+    },
+    "portable": {
+      "artifactName": "Sanza-Museo.exe"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3"
+  }
+}

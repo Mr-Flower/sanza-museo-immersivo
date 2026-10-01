@@ -1,0 +1,45 @@
+# Compila l'eseguibile portatile del totem (Windows) con dentro il sito.
+# Parte a ogni push che tocca il sito o l'app, oppure a mano da
+# Actions → «Eseguibile del totem» → Run workflow.
+# Il risultato sta sempre allo stesso indirizzo:
+#   https://github.com/Mr-Flower/sanza-museo-immersivo/releases/download/totem/Sanza-Museo.exe
+name: Eseguibile del totem
+
+on:
+  push:
+    branches: [main]
+    paths: ['index.html', 'assets/**', 'totem-app/**', '.github/workflows/exe-totem.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: exe-totem
+  cancel-in-progress: true
+
+jobs:
+  exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: totem-app/package-lock.json
+      - name: Dipendenze
+        working-directory: totem-app
+        run: npm ci
+      - name: Compilazione
+        working-directory: totem-app
+        run: npm run exe
+      - name: Pubblicazione
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view totem >/dev/null 2>&1 || gh release create totem \
+            --title "Eseguibile del totem" \
+            --notes "Sanza-Museo.exe: il sito del museo in un eseguibile portatile per Windows, a schermo intero, senza browser e senza rete. Si aggiorna da solo a ogni modifica del sito: la versione qui sotto è sempre l'ultima."
+          gh release upload totem totem-app/dist/Sanza-Museo.exe --clobber

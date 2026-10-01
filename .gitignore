@@ -8,3 +8,7 @@ risorse/
 _t*.html
 .DS_Store
 Thumbs.db
+
+# Eseguibile del totem: dipendenze e risultato della compilazione
+totem-app/node_modules/
+totem-app/dist/

@@ -22,7 +22,8 @@ poi `http://localhost:8000/`.
 ```
 index.html              tutto il sito: markup, stile e script in un file solo
 sw.js                   service worker: il sito regge senza rete (vedi «Totem»)
-totem.bat               avvio a schermo intero sul PC Windows del totem
+totem-app/              l'eseguibile portatile del totem (Electron), vedi «Totem»
+totem.bat               in alternativa: avvio del sito online in Chrome a schermo intero
 manifest.webmanifest    nome e icona per installare il sito come app
 assets/logo/            marchio ufficiale in SVG, estratto dal brand book
 assets/video/           riprese d'archivio (H.264 720p + poster JPG)
@@ -61,7 +62,45 @@ macchina in sala. `?totem=1` cambia quattro cose rispetto al sito normale:
 - **Tutto in cache.** Video, panorami e modello 3D (~35 MB) vengono scaricati
   subito, per reggere senza rete (vedi sotto).
 
-### Avviarlo come un'app (Windows)
+### L'eseguibile (consigliato)
+
+**`Sanza-Museo.exe`** è il sito chiuso in un eseguibile portatile per Windows:
+doppio clic e parte a schermo intero, in modalità totem. Dentro c'è tutto —
+pagina, video, panorami, modello 3D e il motore del browser — quindi sul PC non
+serve Chrome e non serve la rete, nemmeno la prima volta.
+
+Si scarica sempre da qui, ed è sempre l'ultima versione:
+<https://github.com/Mr-Flower/sanza-museo-immersivo/releases/download/totem/Sanza-Museo.exe>
+
+- Si copia il file sul PC del totem (anche da chiavetta) e si apre. Non
+  installa nulla. All'avvio impiega qualche secondo, perché si scompatta in una
+  cartella temporanea: è normale.
+- La prima volta Windows può mostrare «PC protetto da Windows» (il file non è
+  firmato): *Ulteriori informazioni → Esegui comunque*.
+- Si esce con `Alt+F4` (serve una tastiera collegata).
+- Per farlo partire all'accensione: `Win+R`, scrivere `shell:startup`, e
+  mettere lì un collegamento all'exe.
+- Il tempo di inattività si cambia nel collegamento, aggiungendo in fondo alla
+  destinazione ` --attesa=90` (secondi).
+- **Aggiornamenti**: il sito dentro l'exe è quello del momento in cui è stato
+  compilato. A ogni push su `main` GitHub ricompila l'exe da solo (Actions →
+  «Eseguibile del totem», una decina di minuti) e lo rimette all'indirizzo qui
+  sopra: per aggiornare il totem si scarica di nuovo e si sostituisce il file.
+- La mappa di Google compare solo se il PC ha la rete; senza, restano le tre
+  tappe (vedi «Senza rete»).
+
+Il codice sta in `totem-app/` (Electron): `main.js` apre la finestra e serve i
+file del sito da un indirizzo interno, `app://sanza/`. Per provarlo o compilarlo
+a mano serve Node: `cd totem-app && npm install`, poi `npm start` per aprirlo e
+`npm run exe` per compilare (su Windows; il risultato va in `totem-app/dist/`).
+
+Vanno comunque sistemate sul PC le cose elencate in «Sul PC, una volta sola»
+qui sotto.
+
+### In alternativa: il sito online in Chrome (Windows)
+
+Rispetto all'exe ha un vantaggio — le modifiche pubblicate arrivano al totem da
+sole — e due condizioni: Chrome installato e la rete almeno alla prima apertura.
 
 Nel repo c'è **`totem.bat`**: doppio clic e Chrome si apre a schermo intero in
 modalità chiosco sull'indirizzo del totem. Serve Google Chrome installato.

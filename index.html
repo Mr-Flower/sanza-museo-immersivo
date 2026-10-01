@@ -1174,6 +1174,7 @@ if(TOTEM)(function(){
      senza cache una ricarica lascerebbe il totem su una pagina d'errore. */
   async function ricarica(){
     if(dentro())return;                       // nel frattempo qualcuno è entrato
+    if(location.protocol==='app:'){location.reload();return;}   // nell'exe i file stanno sul disco
     try{
       if(!navigator.serviceWorker||!navigator.serviceWorker.controller)return;
       if(await caches.match(location.pathname))location.reload();
@@ -1209,12 +1210,13 @@ if(TOTEM)(function(){
    ------------------------------------------------------------
    Pensato per il totem del museo, dove la connessione va e viene:
    dopo la prima apertura la pagina si serve dalla cache. Da file://
-   la registrazione non è permessa e si salta senza far rumore.
+   la registrazione non è permessa e si salta senza far rumore; lo stesso
+   nell'eseguibile del totem (app://), che i file li ha già sul disco.
    Con ?totem=1 chiede anche il precarico di video, 360 e 3D (~35 MB):
    fuori da quel caso i media entrano in cache solo se guardati, così
    chi apre il sito dal telefono non si scarica il museo intero.
    ============================================================ */
-if('serviceWorker' in navigator && location.protocol!=='file:'){
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
   addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js').then(reg=>{
       const totem=new URLSearchParams(location.search).has('totem');
