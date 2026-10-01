@@ -4,20 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SANZA · museo immersivo — la montagna e la Madonna della Neve</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0c1a21">
+<meta name="google" content="notranslate">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/logo/icona.svg" type="image/svg+xml">
+<!-- Prima di qualsiasi stile: la pagina deve sapere subito se è sul totem
+     (?totem=1) e se la lingua è già stata scelta in questa visita, così la
+     schermata di benvenuto non lampeggia e il layout non salta.
+     Sul totem il benvenuto si mostra sempre; dal telefono solo la prima volta. -->
+<script>
+(function(){
+  var r=document.documentElement;
+  if(new URLSearchParams(location.search).has('totem')){r.classList.add('totem');return;}
+  try{var l=sessionStorage.getItem('lingua');if(l){r.lang=l==='en'?'en':'it';r.classList.add('entrato');}}catch(e){}
+})();
+</script>
+<noscript><style>.benvenuto{display:none}html{overflow:auto!important}</style></noscript>
+<!-- Librerie e caratteri stanno in assets/vendor/: il museo non dipende dai CDN.
+     Se la rete del totem cade (o cdnjs è irraggiungibile) i 360, il 3D e i
+     caratteri restano quelli giusti. Versioni congelate: pannellum 2.5.6,
+     three r128 (= 0.128.0), sottoinsiemi latin e latin-ext dei due caratteri. -->
+<link rel="stylesheet" href="assets/vendor/fonts/fonts.css">
 <!-- pannellum: su cdnjs il pacchetto non contiene le varianti .min (davano 404,
      e i tre visori 360 restavano muti). I nomi corretti sono senza .min -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="assets/vendor/pannellum/pannellum.css">
+<script src="assets/vendor/pannellum/pannellum.js"></script>
+<script src="assets/vendor/three/three.min.js"></script>
 <!-- loader glTF per il modello della Madonna (stessa versione di three, r128).
-     cdnjs non pubblica examples/js: si usa jsdelivr.
-     DRACOLoader è incluso per robustezza (scarica il decoder solo se il
+     DRACOLoader è incluso per robustezza (carica il decoder solo se il
      modello è compresso in Draco); il modello attuale usa meshopt. -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/meshopt_decoder.js"></script>
+<script src="assets/vendor/three/loaders/GLTFLoader.js"></script>
+<script src="assets/vendor/three/loaders/DRACOLoader.js"></script>
+<script src="assets/vendor/three/libs/meshopt_decoder.js"></script>
 <style>
 /* ============================================================
    SANZA · museo immersivo — la montagna e la Madonna della Neve
@@ -58,7 +76,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
-body{font-family:var(--testo);background:var(--notte);color:var(--neve);line-height:1.62;font-size:17px;overflow-x:hidden}
+body{font-family:var(--testo);background:var(--notte);color:var(--neve);line-height:1.62;font-size:1.0625rem;overflow-x:hidden}
 ::selection{background:var(--giallo);color:var(--notte)}
 img,svg,canvas{display:block}
 a{color:var(--giallo)}
@@ -100,7 +118,7 @@ em{font-style:italic}
    c'è spazio solo per il lettering: payoff e parola "museo" sarebbero alti
    pochi pixel, quindi si usa il solo logotipo — il giallo della declinazione
    resta e il lockup completo sta nell'hero e nel piede. */
-.istituzionale .marchio{--mk-h:1.9rem;margin-right:2rem;display:inline-flex;align-items:center;gap:.9rem}
+.istituzionale .marchio{--mk-h:1.9rem;margin-right:auto;display:inline-flex;align-items:center;gap:.9rem}
 /* la parola della declinazione accanto al logotipo: nel marchio vero sarebbe
    alta pochi pixel (02.9), qui è un'etichetta a parte, nel carattere di
    testo e staccata dal marchio per non invaderne l'area di rispetto (02.8) */
@@ -109,6 +127,11 @@ em{font-style:italic}
 .istituzionale .menu{display:flex;gap:1.5rem;font-size:.82rem;font-weight:600}
 .istituzionale .menu a{color:var(--pietra);text-decoration:none;transition:color .2s}
 .istituzionale .menu a:hover{color:var(--giallo)}
+/* cambio lingua: sempre in testata, la lingua attiva è quella piena */
+.lingue{display:inline-flex;flex:none;border:1px solid rgba(245,247,244,.25);border-radius:99px;overflow:hidden}
+.lingue button{min-height:2.3rem;padding:0 .8rem;border:0;background:none;color:var(--pietra);font-family:var(--testo);font-weight:700;font-size:.74rem;letter-spacing:.12em;cursor:pointer;transition:background .2s,color .2s}
+.lingue button[aria-pressed="true"]{background:var(--giallo);color:var(--notte)}
+@media (max-width:380px){.istituzionale .decl{display:none}}
 /* il pulsante compare solo quando il menu non ci sta in riga */
 .apri-menu{display:none;width:44px;height:44px;padding:11px 10px;background:none;border:0;cursor:pointer;flex-direction:column;justify-content:space-between}
 .apri-menu span{display:block;height:2px;background:var(--bianco,#f5f7f4);border-radius:2px;transition:transform .25s,opacity .25s}
@@ -307,6 +330,100 @@ footer .credits{font-size:.66rem;font-weight:500;color:var(--pietra);line-height
 footer .credits strong{color:var(--neve)}
 
 :focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
+
+/* ============================================================
+   BENVENUTO — la prima schermata: si sceglie la lingua e si entra.
+   Sta sopra a tutto ed è già visibile prima che parta lo script, così
+   il sito non si intravede mai sotto. Stesso cielo e stesse case
+   dell'hero: entrando la schermata sfuma e sotto c'è la stessa notte.
+   ============================================================ */
+html:not(.entrato){overflow:hidden}
+.benvenuto{position:fixed;inset:0;z-index:100;display:grid;grid-template-rows:1fr auto;overflow:hidden;background:radial-gradient(ellipse 80% 50% at 70% 110%, rgba(43,65,80,.5), transparent 60%), var(--notte);transition:opacity .6s ease,visibility .6s}
+html.entrato .benvenuto{opacity:0;visibility:hidden;pointer-events:none}
+.benvenuto .cielo{position:absolute;inset:0;width:100%;height:100%}
+.benvenuto .bv-testa{position:relative;z-index:2;align-self:center;display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(1.5rem,5vh,3.5rem) var(--margine)}
+.benvenuto .luogo{font-size:clamp(.7rem,1.5vw,.88rem);font-weight:600;letter-spacing:.2em;color:var(--pietra);margin-bottom:clamp(1.4rem,3.5vh,2.4rem);text-transform:uppercase}
+.benvenuto .marchio{--mk-h:clamp(4rem,19vw,10rem)}
+.benvenuto .saluto{max-width:none;margin:clamp(2rem,6vh,4.5rem) 0 0;font-family:var(--display);font-weight:800;font-size:clamp(2rem,6.5vw,3.6rem);line-height:1.08;letter-spacing:-.01em}
+.benvenuto .saluto span{display:block}
+.benvenuto .saluto span+span{font-weight:500;color:var(--pietra)}
+.benvenuto .scegli{max-width:none;margin:clamp(1.6rem,4.5vh,3.2rem) 0 1.1rem;font-size:.8rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--giallo)}
+.benvenuto .bv-lingue{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:min(100%,32rem)}
+.benvenuto .bv-lingue button{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:1.5rem 1rem;border:0;border-radius:1.1rem;background:var(--giallo);color:var(--notte);font-family:var(--display);font-weight:800;font-size:clamp(1.3rem,4vw,1.8rem);line-height:1.1;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .2s,box-shadow .2s;animation:respiro 3.2s ease-in-out infinite}
+.benvenuto .bv-lingue button+button{animation-delay:1.6s}
+.benvenuto .bv-lingue button:hover{box-shadow:0 8px 24px rgba(255,163,0,.3)}
+.benvenuto .bv-lingue button:active{transform:scale(.97)}
+.benvenuto .bv-lingue button span{font-family:var(--testo);font-weight:600;font-size:.78rem;letter-spacing:.02em;opacity:.8}
+@keyframes respiro{0%,100%{box-shadow:0 0 0 0 rgba(255,163,0,.35)}50%{box-shadow:0 0 0 .7rem rgba(255,163,0,0)}}
+.benvenuto .skyline{position:relative;z-index:2;display:block;width:100%;height:auto}
+
+/* ============================================================
+   TOTEM — il sito sul totem verticale del museo (9:16, 42", touch).
+   Si attiva con ?totem=1, che mette la classe .totem su <html>.
+
+   I testi: da un metro di distanza il corpo deve essere alto circa un
+   centimetro e mezzo. Invece di contare sulla risoluzione del pannello
+   (Full HD o 4K non si sa) o su un flag del browser, l'unità di base è
+   legata alla larghezza dello schermo: 1rem = 1/37 della larghezza,
+   cioè ~29 px su un pannello da 1080. Tutto ciò che è in rem cresce in
+   proporzione, e il risultato è lo stesso qualunque sia la risoluzione.
+   Per ingrandire o rimpicciolire tutto insieme si tocca solo quel 37
+   (più basso = più grande).
+
+   L'impaginazione è quella verticale del telefono: niente righello,
+   menu a tendina, schede in colonna. Le media query ragionano in pixel
+   e sul totem non scatterebbero, quindi quelle regole sono ripetute qui.
+   --k è il rapporto fra il rem del totem e i 16 px normali: lo scrive
+   lo script e serve a ingrandire i pochi comandi disegnati in pixel.
+   ============================================================ */
+html.totem{font-size:calc(100vw / 37);--rail-w:0px;touch-action:pan-x pan-y;overscroll-behavior:none;scrollbar-width:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+html.totem::-webkit-scrollbar{display:none}
+html.totem #rail{display:none}
+html.totem main,html.totem footer{margin-left:0}
+html.totem .apri-menu{display:flex;zoom:var(--k,1)}
+html.totem .istituzionale .menu{position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:rgba(12,26,33,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(245,247,244,.12);padding:.4rem 0;font-size:1.1rem;
+  opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .22s,transform .22s,visibility .22s}
+html.totem .istituzionale .menu.aperto{opacity:1;visibility:visible;transform:none}
+html.totem .istituzionale .menu a{padding:.95rem var(--margine);color:var(--neve)}
+html.totem .istituzionale .menu a+a{border-top:1px solid rgba(245,247,244,.08)}
+html.totem #hero .claim{font-size:1.3rem}
+html.totem #hero .invito{font-size:1.1rem;padding:1.1rem 2.2rem}
+/* la mappa resta ferma finché non la si tocca, come sul telefono */
+html.totem .mappa-cont{aspect-ratio:1/1;min-height:0}
+html.totem .attiva-mappa{display:flex;font-size:.95rem}
+html.totem .tappe,html.totem .schede{grid-template-columns:1fr}
+html.totem .tappe a{font-size:1rem;padding:1rem 1.2rem}
+html.totem .tappe span{font-size:.88rem}
+html.totem .dot{width:.8rem;height:.95rem}
+html.totem .scheda .casetta{width:1.3rem;height:1.5rem}
+/* i visori non devono riempire lo schermo: il dito dentro un 360 muove il
+   panorama, e per scorrere la pagina serve sempre un po' di pagina attorno */
+html.totem .pano{height:50vh;min-height:0}
+html.totem #viewer3d{height:58vh;min-height:0}
+html.totem .viewer .zoom button{width:2.6rem;height:2.6rem;border-radius:.5rem;font-size:1.5rem}
+html.totem .viewer .zoom button svg{width:1.2rem;height:1.2rem}
+html.totem .viewer .pnlm-controls-container{zoom:calc(var(--k,1) * 1.5);bottom:4px;right:4px}
+html.totem footer .piede{grid-template-columns:1fr}
+html.totem footer .credits{text-align:left;font-size:.72rem}
+/* I comandi del video di Chrome sono alti una ventina di pixel e non si
+   ingrandiscono: su un touch da sala non si prendono. Sul totem il video ha
+   un comando solo, grande quanto il video: un tocco avvia, un tocco ferma.
+   Sotto, una barra dice a che punto si è. */
+.video-cornice .vai{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;border:0;background:rgba(12,26,33,.3);cursor:pointer;transition:background .25s}
+.video-cornice .vai::before{content:'';width:5.5rem;height:5.5rem;border-radius:50%;background:var(--giallo);box-shadow:0 8px 28px rgba(0,0,0,.45);transition:opacity .25s,transform .25s}
+.video-cornice .vai::after{content:'';position:absolute;width:1.9rem;height:2.2rem;margin-left:.4rem;background:var(--notte);clip-path:polygon(0 0,100% 50%,0 100%);transition:opacity .25s}
+.video-cornice.in-corso .vai{background:none}
+.video-cornice.in-corso .vai::before,.video-cornice.in-corso .vai::after{opacity:0}
+.video-cornice .avanza{position:absolute;left:0;bottom:0;z-index:5;width:0;height:.4rem;background:var(--giallo);pointer-events:none}
+/* dal totem non si esce verso altri siti: i link esterni diventano testo */
+html.totem footer .contatti a{text-decoration:none}
+
+/* «Sei ancora qui?» — il preavviso prima di tornare al benvenuto */
+.avviso{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:var(--margine);background:rgba(12,26,33,.82);backdrop-filter:blur(6px);text-align:center;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.avviso.on{opacity:1;visibility:visible}
+.avviso b{display:block;font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1.1}
+.avviso span{display:block;margin-top:.8rem;font-size:1.1rem;color:var(--pietra)}
+.avviso i{display:block;margin-top:1.6rem;font-family:var(--display);font-style:normal;font-weight:900;font-size:5rem;line-height:1;color:var(--giallo)}
 </style>
 </head>
 <body>
@@ -322,17 +439,42 @@ footer .credits strong{color:var(--neve)}
 <symbol id="casa" viewBox="0 0 50.96 59.45"><path fill="currentColor" d="M25.48 0L0 25.48L0 59.45L16.98 59.45L16.98 39.07C16.98 34.38 20.78 30.57 25.48 30.57C30.17 30.57 33.97 34.38 33.97 39.07L33.97 59.45L50.96 59.45L50.96 25.48Z"/></symbol>
 </defs></svg>
 
+<!-- BENVENUTO: scelta della lingua. Le due lingue stanno fianco a fianco e
+     non si traducono: chi arriva non ha ancora scelto. -->
+<div class="benvenuto" id="benvenuto" role="dialog" aria-modal="true" aria-label="Benvenuti · Welcome">
+  <canvas class="cielo" id="cielo-benvenuto" aria-hidden="true"></canvas>
+  <div class="bv-testa">
+    <div class="luogo">Parco Nazionale del Cilento, Vallo di Diano e Alburni</div>
+    <span class="marchio" role="img" aria-label="Sanza museo · il borgo dell’accoglienza">
+      <svg class="mk mk-full" viewBox="0 0 238.36 96.82" aria-hidden="true"><use href="#mk-museo"/></svg>
+    </span>
+    <p class="saluto"><span lang="it">Benvenuti</span><span lang="en">Welcome</span></p>
+    <p class="scegli">Scegli la lingua · Choose your language</p>
+    <div class="bv-lingue">
+      <button type="button" data-lingua="it" lang="it">Italiano<span>Tocca per iniziare</span></button>
+      <button type="button" data-lingua="en" lang="en">English<span>Touch to begin</span></button>
+    </div>
+  </div>
+  <svg class="skyline" aria-hidden="true" id="skyBenvenuto"></svg>
+</div>
+
+<!-- preavviso di inattività (solo totem) -->
+<div class="avviso" id="avviso" aria-live="polite"><div><b data-t="avviso.titolo">Sei ancora qui?</b><span data-t="avviso.testo">Tocca lo schermo per continuare</span><i id="avviso-conto">15</i></div></div>
+
 <div class="istituzionale">
   <a class="marchio" href="#hero" aria-label="Sanza museo · il borgo dell’accoglienza">
     <svg class="mk mk-solo" viewBox="0 0 97.54 76.98" aria-hidden="true"><use href="#mk-lettering"/></svg>
     <span class="decl">museo</span>
   </a>
-  <button class="apri-menu" id="apri-menu" aria-expanded="false" aria-controls="menu" aria-label="Apri il menu">
+  <nav class="menu" id="menu">
+    <a href="#mappa" data-t="m.salita">La salita</a><a href="#religioso" data-t="m.marunnari">I marunnari</a><a href="#vallevona">Vallevona</a><a href="#tresd" data-t="m.santuario">Il santuario</a><a href="#cervati" data-t="m.vetta">La vetta</a>
+  </nav>
+  <div class="lingue" role="group" aria-label="Lingua · Language">
+    <button type="button" data-lingua="it" aria-pressed="true" aria-label="Italiano">IT</button><button type="button" data-lingua="en" aria-pressed="false" aria-label="English">EN</button>
+  </div>
+  <button class="apri-menu" id="apri-menu" aria-expanded="false" aria-controls="menu" aria-label="Apri il menu" data-t-aria="menu.apri">
     <span></span><span></span><span></span>
   </button>
-  <nav class="menu" id="menu">
-    <a href="#mappa">La salita</a><a href="#religioso">I marunnari</a><a href="#vallevona">Vallevona</a><a href="#tresd">Il santuario</a><a href="#cervati">La vetta</a>
-  </nav>
 </div>
 
 <nav id="rail" aria-hidden="true">
@@ -345,12 +487,12 @@ footer .credits strong{color:var(--neve)}
 <section id="hero">
   <canvas id="cielo-hero" aria-hidden="true"></canvas>
   <div class="testa">
-    <div class="luogo">Parco Nazionale del Cilento, Vallo di Diano e Alburni</div>
+    <div class="luogo" data-t="hero.luogo">Parco Nazionale del Cilento, Vallo di Diano e Alburni</div>
     <span class="marchio" role="img" aria-label="Sanza museo · il borgo dell’accoglienza">
       <svg class="mk mk-full" viewBox="0 0 238.36 96.82" aria-hidden="true"><use href="#mk-museo"/></svg>
     </span>
-    <p class="claim">Una montagna sacra, alta 1898 metri. E una notte d'estate, ogni anno da secoli, in cui il paese intero sale a piedi nel buio portando la Madonna della Neve fino in vetta.</p>
-    <a class="invito" href="#mappa">Inizia la salita <span class="fr">↓</span></a>
+    <p class="claim" data-t="hero.claim">Una montagna sacra, alta 1898 metri. E una notte d'estate, ogni anno da secoli, in cui il paese intero sale a piedi nel buio portando la Madonna della Neve fino in vetta.</p>
+    <a class="invito" href="#mappa" data-t="hero.invito">Inizia la salita <span class="fr">↓</span></a>
   </div>
   <svg class="skyline" aria-hidden="true" id="skyHero"></svg>
 </section>
@@ -358,17 +500,17 @@ footer .credits strong{color:var(--neve)}
 <!-- LA SALITA (MAPPA) -->
 <section id="mappa">
   <div class="sez">
-    <div class="eyebrow rivela">La salita</div>
-    <h2 class="rivela">Dal borgo alla vetta più alta della Campania</h2>
-    <p class="lede rivela">Tre tappe lungo il cammino della Madonna della Neve: Sanza, dove la salita comincia; Vallevona, l'altopiano carsico a metà strada; la vetta del Cervati, con il suo santuario. A ogni tappa, un panorama immersivo a 360°.</p>
+    <div class="eyebrow rivela" data-t="mappa.eyebrow">La salita</div>
+    <h2 class="rivela" data-t="mappa.h2">Dal borgo alla vetta più alta della Campania</h2>
+    <p class="lede rivela" data-t="mappa.lede">Tre tappe lungo il cammino della Madonna della Neve: Sanza, dove la salita comincia; Vallevona, l'altopiano carsico a metà strada; la vetta del Cervati, con il suo santuario. A ogni tappa, un panorama immersivo a 360°.</p>
     <div class="mappa-cont rivela" id="mappa-cont">
-      <iframe title="Mappa: da Sanza al Monte Cervati" src="https://www.google.com/maps?ll=40.2795,15.5085&amp;z=12&amp;t=p&amp;hl=it&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-      <button class="attiva-mappa" type="button"><span>Tocca per muovere la mappa</span></button>
+      <iframe title="Mappa: da Sanza al Monte Cervati" data-t-title="mappa.titolo" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <button class="attiva-mappa" type="button"><span data-t="mappa.tocca">Tocca per muovere la mappa</span></button>
     </div>
     <ul class="tappe rivela">
-      <li><a href="#religioso"><i class="dot casa"></i><b>Sanza</b> · 558 m<span>la Chiesa Madre, dove la salita comincia</span></a></li>
-      <li><a href="#vallevona"><i class="dot casa"></i><b>Vallevona</b> · ~1500 m<span>l'altopiano carsico, a metà cammino</span></a></li>
-      <li><a href="#cervati"><i class="dot casa"></i><b>Monte Cervati</b> · 1898 m<span>il santuario e la grotta della Madonna</span></a></li>
+      <li><a href="#religioso"><i class="dot casa"></i><b>Sanza</b> · 558 m<span data-t="tappa.1">la Chiesa Madre, dove la salita comincia</span></a></li>
+      <li><a href="#vallevona"><i class="dot casa"></i><b>Vallevona</b> · ~1500 m<span data-t="tappa.2">l'altopiano carsico, a metà cammino</span></a></li>
+      <li><a href="#cervati"><i class="dot casa"></i><b>Monte Cervati</b> · 1898 m<span data-t="tappa.3">il santuario e la grotta della Madonna</span></a></li>
     </ul>
   </div>
 </section>
@@ -376,16 +518,16 @@ footer .credits strong{color:var(--neve)}
 <!-- I MARUNNARI -->
 <section id="religioso">
   <div class="sez">
-    <div class="eyebrow rivela">Sanza · 26 luglio, ore 4:00</div>
-    <h2 class="rivela">La notte dei marunnari</h2>
-    <p class="lede rivela">Nella notte tra il 25 e il 26 luglio la statua lignea della Madonna della Neve lascia la Chiesa Madre di Santa Maria Assunta. I <em>marunnari</em> la portano in spalla per circa diciotto chilometri di mulattiere e faggete, fino al santuario sulla vetta del Cervati. Tornerà in paese, sempre a spalla e sempre di notte, tra il 4 e il 5 agosto, per la festa patronale.</p>
-    <p class="rivela">Il culto ha radici medievali: una cappella sul Cervati è attestata fin dal IX secolo, e l'architrave del portale interno porta la data 1599. Dal 2021 il pellegrinaggio è iscritto nell'inventario IPIC degli elementi culturali immateriali della Campania.</p>
-    <div class="video-cornice rivela"><div class="tag">Archivio · la salita nella notte</div><div id="video-marunnari"></div></div>
-    <p class="dida rivela">La portantina della Madonna sale a spalla nel buio, tra le torce e i canti. <span class="credito">Riprese d’archivio: TeleCervati. [da accertare: anno delle riprese · ente detentore dei diritti]</span></p>
+    <div class="eyebrow rivela" data-t="rel.eyebrow">Sanza · 26 luglio, ore 4:00</div>
+    <h2 class="rivela" data-t="rel.h2">La notte dei marunnari</h2>
+    <p class="lede rivela" data-t="rel.lede">Nella notte tra il 25 e il 26 luglio la statua lignea della Madonna della Neve lascia la Chiesa Madre di Santa Maria Assunta. I <em>marunnari</em> la portano in spalla per circa diciotto chilometri di mulattiere e faggete, fino al santuario sulla vetta del Cervati. Tornerà in paese, sempre a spalla e sempre di notte, tra il 4 e il 5 agosto, per la festa patronale.</p>
+    <p class="rivela" data-t="rel.p2">Il culto ha radici medievali: una cappella sul Cervati è attestata fin dal IX secolo, e l'architrave del portale interno porta la data 1599. Dal 2021 il pellegrinaggio è iscritto nell'inventario IPIC degli elementi culturali immateriali della Campania.</p>
+    <div class="video-cornice rivela"><div class="tag" data-t="rel.tag">Archivio · la salita nella notte</div><div id="video-marunnari"></div></div>
+    <p class="dida rivela" data-t="rel.dida">La portantina della Madonna sale a spalla nel buio, tra le torce e i canti. <span class="credito">Riprese d’archivio: TeleCervati. [da accertare: anno delle riprese · ente detentore dei diritti]</span></p>
     <div class="schede rivela">
-      <div class="scheda"><div class="casetta casa"></div><div class="quando">PRIMA DOMENICA DI GIUGNO</div><h3>L'apertura del santuario</h3><p>La stagione si apre con la messa in vetta: l'immagine della Madonna viene svelata dal velo bianco che l'ha custodita durante l'inverno.</p></div>
-      <div class="scheda"><div class="casetta casa"></div><div class="quando">26 LUGLIO · ORE 4:00</div><h3>La salita</h3><p>Quattro ore di cammino nel buio. In vetta, l'apertura della "stipa", la benedizione dei marunnari e la messa del mattino.</p></div>
-      <div class="scheda"><div class="casetta casa"></div><div class="quando">NOTTE DEL 4–5 AGOSTO</div><h3>Il ritorno</h3><p>La discesa riporta la Madonna in paese per la festa patronale, con la processione insieme al protettore San Sabino Martire.</p></div>
+      <div class="scheda"><div class="casetta casa"></div><div class="quando" data-t="s1.quando">PRIMA DOMENICA DI GIUGNO</div><h3 data-t="s1.h3">L'apertura del santuario</h3><p data-t="s1.p">La stagione si apre con la messa in vetta: l'immagine della Madonna viene svelata dal velo bianco che l'ha custodita durante l'inverno.</p></div>
+      <div class="scheda"><div class="casetta casa"></div><div class="quando" data-t="s2.quando">26 LUGLIO · ORE 4:00</div><h3 data-t="s2.h3">La salita</h3><p data-t="s2.p">Quattro ore di cammino nel buio. In vetta, l'apertura della "stipa", la benedizione dei marunnari e la messa del mattino.</p></div>
+      <div class="scheda"><div class="casetta casa"></div><div class="quando" data-t="s3.quando">NOTTE DEL 4–5 AGOSTO</div><h3 data-t="s3.h3">Il ritorno</h3><p data-t="s3.p">La discesa riporta la Madonna in paese per la festa patronale, con la processione insieme al protettore San Sabino Martire.</p></div>
     </div>
   </div>
 </section>
@@ -393,53 +535,53 @@ footer .credits strong{color:var(--neve)}
 <!-- VALLEVONA -->
 <section id="vallevona">
   <div class="sez">
-    <div class="eyebrow rivela">Vallevona · ~1500 m, a metà salita</div>
-    <h2 class="rivela">L'altopiano del silenzio</h2>
-    <p class="lede rivela">A metà cammino la faggeta si apre su Vallevona: un altopiano carsico modellato dall'acqua nella roccia calcarea, dove l'inghiottitoio raccoglie le acque e i laghetti stagionali appaiono solo in certi mesi. È il luogo della sosta, prima dell'ultimo tratto verso la vetta.</p>
-    <div class="viewer rivela"><div class="tag">360° · l'inghiottitoio di Vallevona</div><div class="pano" id="viewer360-vallevona"></div></div>
-    <p class="dida rivela">Trascina per esplorare. La bocca dell'inghiottitoio, dove le acque sprofondano nel sistema carsico. <span class="credito">Riprese 360°: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
+    <div class="eyebrow rivela" data-t="val.eyebrow">Vallevona · ~1500 m, a metà salita</div>
+    <h2 class="rivela" data-t="val.h2">L'altopiano del silenzio</h2>
+    <p class="lede rivela" data-t="val.lede">A metà cammino la faggeta si apre su Vallevona: un altopiano carsico modellato dall'acqua nella roccia calcarea, dove l'inghiottitoio raccoglie le acque e i laghetti stagionali appaiono solo in certi mesi. È il luogo della sosta, prima dell'ultimo tratto verso la vetta.</p>
+    <div class="viewer rivela"><div class="tag" data-t="val.tag">360° · l'inghiottitoio di Vallevona</div><div class="pano" id="viewer360-vallevona"></div></div>
+    <p class="dida rivela" data-t="val.dida">Trascina per esplorare. La bocca dell'inghiottitoio, dove le acque sprofondano nel sistema carsico. <span class="credito">Riprese 360°: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
   </div>
 </section>
 
 <!-- IL SANTUARIO (3D) -->
 <section id="tresd">
   <div class="sez">
-    <div class="eyebrow rivela">Il patrimonio in tre dimensioni</div>
-    <h2 class="rivela">Pietra, legno, quota</h2>
-    <p class="lede rivela">In vetta, il santuario della Madonna della Neve con la facciata di pietre numerate a scalpello, la grotta carsica che custodisce l'immagine, la statua lignea della Madonna con Bambino. Qui i rilievi diventano modelli ispezionabili.</p>
-    <div class="viewer rivela"><div class="tag">360° · il santuario in vetta</div><div class="pano" id="viewer360-santuario"></div></div>
-    <p class="dida rivela">Il sagrato in vetta: le scalinate in pietra, gli edifici del santuario, la roccia calcarea e l'orizzonte che si apre tutt'intorno. <span class="credito">Riprese 360°: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
+    <div class="eyebrow rivela" data-t="tre.eyebrow">Il patrimonio in tre dimensioni</div>
+    <h2 class="rivela" data-t="tre.h2">Pietra, legno, quota</h2>
+    <p class="lede rivela" data-t="tre.lede">In vetta, il santuario della Madonna della Neve con la facciata di pietre numerate a scalpello, la grotta carsica che custodisce l'immagine, la statua lignea della Madonna con Bambino. Qui i rilievi diventano modelli ispezionabili.</p>
+    <div class="viewer rivela"><div class="tag" data-t="tre.tag1">360° · il santuario in vetta</div><div class="pano" id="viewer360-santuario"></div></div>
+    <p class="dida rivela" data-t="tre.dida1">Il sagrato in vetta: le scalinate in pietra, gli edifici del santuario, la roccia calcarea e l'orizzonte che si apre tutt'intorno. <span class="credito">Riprese 360°: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
 
-    <div class="viewer rivela"><div class="tag">360° · la grotta che custodisce l'immagine</div><div class="pano" id="viewer360-grotta"></div></div>
-    <p class="dida rivela">Dentro la grotta carsica che custodisce l'immagine: la nicchia illuminata, l'altare, le candele dei pellegrini e la roccia nuda tutt'attorno. <span class="credito">Riprese 360°: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
+    <div class="viewer rivela"><div class="tag" data-t="tre.tag2">360° · la grotta che custodisce l'immagine</div><div class="pano" id="viewer360-grotta"></div></div>
+    <p class="dida rivela" data-t="tre.dida2">Dentro la grotta carsica che custodisce l'immagine: la nicchia illuminata, l'altare, le candele dei pellegrini e la roccia nuda tutt'attorno. <span class="credito">Riprese 360°: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
 
     <div class="viewer rivela">
-      <div class="tag">3D · la statua della Madonna della Neve</div>
+      <div class="tag" data-t="tre.tag3">3D · la statua della Madonna della Neve</div>
       <canvas id="viewer3d"></canvas>
       <div class="zoom">
-        <button type="button" id="z3d-piu" aria-label="Avvicina il modello">+</button>
-        <button type="button" id="z3d-meno" aria-label="Allontana il modello">−</button>
-        <button type="button" id="z3d-pieno" aria-label="Schermo intero" title="Schermo intero">
+        <button type="button" id="z3d-piu" aria-label="Avvicina il modello" data-t-aria="z.piu">+</button>
+        <button type="button" id="z3d-meno" aria-label="Allontana il modello" data-t-aria="z.meno">−</button>
+        <button type="button" id="z3d-pieno" aria-label="Schermo intero" data-t-aria="z.pieno">
           <svg viewBox="0 0 26 26" aria-hidden="true"><path fill="currentColor" d="M5 8V5h3V3H3v5zm13 0h3V5h-3V3h5v5zM5 18H3v5h5v-2H5zm16 0v3h-3v2h5v-5z"/></svg>
         </button>
       </div>
-      <div class="caric" id="caric3d"><span class="pct">0%</span><span class="txt">caricamento del rilievo</span></div>
+      <div class="caric" id="caric3d"><span class="pct">0%</span><span class="txt" data-t="tre.caric">caricamento del rilievo</span></div>
     </div>
-    <p class="dida rivela">Trascina per ruotare, i pulsanti +/− o la pinch per avvicinarti, l’ultimo pulsante per lo schermo intero. È il rilievo fotogrammetrico della statua lignea portata in processione: la Madonna con il Bambino, entrambi incoronati, sul basamento inciso <em>«Io sono la protettrice del popolo di Sanza»</em>. <span class="credito">Rilievo fotogrammetrico: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
+    <p class="dida rivela" data-t="tre.dida3">Trascina per ruotare, i pulsanti +/− o la pinch per avvicinarti, l’ultimo pulsante per lo schermo intero. È il rilievo fotogrammetrico della statua lignea portata in processione: la Madonna con il Bambino, entrambi incoronati, sul basamento inciso <em>«Io sono la protettrice del popolo di Sanza»</em>. <span class="credito">Rilievo fotogrammetrico: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
   </div>
 </section>
 
 <!-- LA VETTA (CERVATI) -->
 <section id="cervati">
   <div class="sez">
-    <div class="eyebrow rivela">L'arrivo · Monte Cervati</div>
-    <div class="quota-big rivela">1898<small>METRI · LA VETTA</small></div>
-    <h2 class="rivela" style="margin-top:2rem">L'alba sul Cilento</h2>
-    <p class="lede rivela">I marunnari arrivano in vetta che è già giorno. Da quassù si vedono il Cilento, il Vallo di Diano, l'Appennino lucano — e il borgo da cui questa salita è partita, milletrecentoquaranta metri più in basso. Qui si apre la "stipa" e la Madonna riceve la sua veglia.</p>
-    <div class="video-cornice rivela"><div class="tag">Archivio · l'apertura della stipa</div><div id="video-vetta"></div></div>
-    <p class="dida rivela">Arrivati in vetta: la stipa viene aperta davanti alla folla seduta sulle rocce, l'immagine della Madonna con il Bambino torna scoperta e riceve le corone. <span class="credito">Riprese d’archivio: TeleCervati. [da accertare: anno delle riprese · ente detentore dei diritti]</span></p>
-    <div class="viewer rivela"><div class="tag">360° · la vetta del Cervati</div><div class="pano" id="viewer360-cervati"></div></div>
-    <p class="dida rivela">Trascina per esplorare. Il crinale in vetta, con lo sguardo che corre fino al Cilento e al Vallo di Diano. <span class="credito">Riprese 360°: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
+    <div class="eyebrow rivela" data-t="cer.eyebrow">L'arrivo · Monte Cervati</div>
+    <div class="quota-big rivela">1898<small data-t="cer.small">METRI · LA VETTA</small></div>
+    <h2 class="rivela" style="margin-top:2rem" data-t="cer.h2">L'alba sul Cilento</h2>
+    <p class="lede rivela" data-t="cer.lede">I marunnari arrivano in vetta che è già giorno. Da quassù si vedono il Cilento, il Vallo di Diano, l'Appennino lucano — e il borgo da cui questa salita è partita, milletrecentoquaranta metri più in basso. Qui si apre la "stipa" e la Madonna riceve la sua veglia.</p>
+    <div class="video-cornice rivela"><div class="tag" data-t="cer.tag1">Archivio · l'apertura della stipa</div><div id="video-vetta"></div></div>
+    <p class="dida rivela" data-t="cer.dida1">Arrivati in vetta: la stipa viene aperta davanti alla folla seduta sulle rocce, l'immagine della Madonna con il Bambino torna scoperta e riceve le corone. <span class="credito">Riprese d’archivio: TeleCervati. [da accertare: anno delle riprese · ente detentore dei diritti]</span></p>
+    <div class="viewer rivela"><div class="tag" data-t="cer.tag2">360° · la vetta del Cervati</div><div class="pano" id="viewer360-cervati"></div></div>
+    <p class="dida rivela" data-t="cer.dida2">Trascina per esplorare. Il crinale in vetta, con lo sguardo che corre fino al Cilento e al Vallo di Diano. <span class="credito">Riprese 360°: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span></p>
   </div>
 </section>
 
@@ -454,11 +596,151 @@ footer .credits strong{color:var(--neve)}
       </span>
       <div class="contatti"><a href="https://comune.sanza.sa.it">comune.sanza.sa.it</a> · <a href="https://scabec.it">scabec.it</a><div class="hash">#sanzaborgoaccoglienza</div></div>
     </div>
-    <div class="credits"><strong>Comune di Sanza</strong> · con Scabec — Società Campana Beni Culturali<br>Regione Campania · Finanziato dall'Unione europea — NextGenerationEU<br>Ministero della Cultura<br>Panorami 360° e rilievi 3D: <strong>Centro ICT per i Beni Culturali</strong> — Università degli Studi di Salerno<br>Riprese d’archivio: <strong>TeleCervati</strong><br><span style="opacity:.7">[spazio per i logo istituzionali ufficiali]</span></div>
+    <div class="credits" data-t="piede.credits"><strong>Comune di Sanza</strong> · con Scabec — Società Campana Beni Culturali<br>Regione Campania · Finanziato dall'Unione europea — NextGenerationEU<br>Ministero della Cultura<br>Panorami 360° e rilievi 3D: <strong>Centro ICT per i Beni Culturali</strong> — Università degli Studi di Salerno<br>Riprese d’archivio: <strong>TeleCervati</strong><br><span style="opacity:.7">[spazio per i logo istituzionali ufficiali]</span></div>
   </div>
 </footer>
 
 <script>
+/* ============================================================
+   LINGUE — italiano e inglese
+   ------------------------------------------------------------
+   L'italiano è quello scritto nella pagina e resta la fonte: lo
+   script lo legge da lì e lo rimette quando serve. Ogni elemento
+   che va tradotto porta un data-t con la sua chiave, e l'inglese
+   corrispondente sta in EN qui sotto. Per aggiungere un testo:
+   data-t="chiave" sull'elemento e la stessa chiave in EN.
+   TESTI contiene invece le poche frasi che nascono dallo script
+   (etichette, messaggi) e gli attributi, in entrambe le lingue.
+   ============================================================ */
+const radice=document.documentElement;
+const TOTEM=radice.classList.contains('totem');
+let lingua=radice.lang==='en'?'en':'it';
+
+const CRED_360=`<span class="credito">360° imagery: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span>`;
+const CRED_ARCH=`<span class="credito">Archive footage: TeleCervati. [to be confirmed: year of filming · rights holder]</span>`;
+const EN={
+  'm.salita':'The climb','m.marunnari':'The marunnari','m.santuario':'The sanctuary','m.vetta':'The summit',
+  'avviso.titolo':'Still there?','avviso.testo':'Touch the screen to continue',
+
+  'hero.luogo':'Cilento, Vallo di Diano and Alburni National Park',
+  'hero.claim':`A sacred mountain, 1,898 metres high. And one summer night, every year for centuries, when the whole village climbs on foot in the dark, carrying the Madonna della Neve — Our Lady of the Snows — to the summit.`,
+  'hero.invito':'Begin the climb <span class="fr">↓</span>',
+
+  'mappa.eyebrow':'The climb',
+  'mappa.h2':'From the village to the highest peak in Campania',
+  'mappa.lede':`Three stages along the path of the Madonna della Neve: Sanza, where the climb begins; Vallevona, the karst plateau halfway up; the summit of Monte Cervati, with its sanctuary. At each stage, an immersive 360° panorama.`,
+  'mappa.tocca':'Touch to move the map',
+  'tappa.1':'the Mother Church, where the climb begins',
+  'tappa.2':'the karst plateau, halfway along the path',
+  'tappa.3':'the sanctuary and the grotto of the Madonna',
+
+  'rel.eyebrow':'Sanza · 26 July, 4:00 am',
+  'rel.h2':'The night of the marunnari',
+  'rel.lede':`On the night between 25 and 26 July the wooden statue of the Madonna della Neve leaves the Mother Church of Santa Maria Assunta. The <em>marunnari</em> carry it on their shoulders along some eighteen kilometres of mule tracks and beech woods, up to the sanctuary on the summit of Monte Cervati. It comes back to the village — again on their shoulders, again by night — between 4 and 5 August, for the patronal feast.`,
+  'rel.p2':`The devotion has medieval roots: a chapel on Monte Cervati is recorded as early as the 9th century, and the lintel of the inner doorway bears the date 1599. Since 2021 the pilgrimage has been listed in IPIC, the Campania Region's inventory of intangible cultural heritage.`,
+  'rel.tag':'Archive · the climb by night',
+  'rel.dida':`The litter of the Madonna climbs on the bearers' shoulders in the dark, among torches and hymns. ${CRED_ARCH}`,
+  's1.quando':'FIRST SUNDAY OF JUNE','s1.h3':'The opening of the sanctuary',
+  's1.p':`The season opens with Mass on the summit: the image of the Madonna is unveiled from the white cloth that has kept it through the winter.`,
+  's2.quando':'26 JULY · 4:00 AM','s2.h3':'The climb',
+  's2.p':`Four hours' walk in the dark. On the summit, the opening of the “stipa”, the blessing of the marunnari and morning Mass.`,
+  's3.quando':'NIGHT OF 4–5 AUGUST','s3.h3':'The return',
+  's3.p':`The descent brings the Madonna back to the village for the patronal feast, with the procession alongside the patron saint, San Sabino Martire.`,
+
+  'val.eyebrow':'Vallevona · ~1500 m, halfway up',
+  'val.h2':'The plateau of silence',
+  'val.lede':`Halfway up, the beech forest opens onto Vallevona: a karst plateau shaped by water in the limestone, where the swallow hole gathers the waters and seasonal ponds appear only in certain months. It is the place to rest, before the last stretch to the summit.`,
+  'val.tag':'360° · the Vallevona swallow hole',
+  'val.dida':`Drag to explore. The mouth of the swallow hole, where the waters plunge into the karst system. ${CRED_360}`,
+
+  'tre.eyebrow':'Heritage in three dimensions',
+  'tre.h2':'Stone, wood, altitude',
+  'tre.lede':`On the summit: the sanctuary of the Madonna della Neve, its façade of stones numbered with a chisel; the karst grotto that guards the image; the wooden statue of the Madonna and Child. Here the surveys become models you can inspect.`,
+  'tre.tag1':'360° · the sanctuary on the summit',
+  'tre.dida1':`The forecourt on the summit: the stone stairways, the sanctuary buildings, the limestone rock and the horizon opening all around. ${CRED_360}`,
+  'tre.tag2':'360° · the grotto that guards the image',
+  'tre.dida2':`Inside the karst grotto that guards the image: the lit niche, the altar, the pilgrims' candles and the bare rock all around. ${CRED_360}`,
+  'tre.tag3':'3D · the statue of the Madonna della Neve',
+  'tre.caric':'loading the model',
+  'tre.dida3':`Drag to rotate, use the +/− buttons or pinch to zoom, and the last button for full screen. This is the photogrammetric survey of the wooden statue carried in procession: the Madonna and Child, both crowned, on the base inscribed <em>«Io sono la protettrice del popolo di Sanza»</em> — “I am the protector of the people of Sanza”. <span class="credito">Photogrammetric survey: Centro ICT per i Beni Culturali — Università degli Studi di Salerno, 2026. © Centro ICT per i Beni Culturali — UniSA.</span>`,
+
+  'cer.eyebrow':'The arrival · Monte Cervati',
+  'cer.small':'METRES · THE SUMMIT',
+  'cer.h2':'Dawn over the Cilento',
+  'cer.lede':`The marunnari reach the summit when it is already day. From up here you can see the Cilento, the Vallo di Diano, the Lucanian Apennines — and the village where this climb began, one thousand three hundred and forty metres below. Here the “stipa” is opened and the Madonna receives her vigil.`,
+  'cer.tag1':'Archive · the opening of the stipa',
+  'cer.dida1':`On the summit: the stipa is opened before the crowd sitting on the rocks, the image of the Madonna and Child is uncovered once more and receives its crowns. ${CRED_ARCH}`,
+  'cer.tag2':'360° · the summit of Monte Cervati',
+  'cer.dida2':`Drag to explore. The summit ridge, with the view reaching as far as the Cilento and the Vallo di Diano. ${CRED_360}`,
+
+  'piede.credits':`<strong>Comune di Sanza</strong> · with Scabec — Società Campana Beni Culturali<br>Regione Campania · Funded by the European Union — NextGenerationEU<br>Ministero della Cultura<br>360° panoramas and 3D surveys: <strong>Centro ICT per i Beni Culturali</strong> — Università degli Studi di Salerno<br>Archive footage: <strong>TeleCervati</strong><br><span style="opacity:.7">[space for the official institutional logos]</span>`,
+};
+const TESTI={
+  it:{
+    'titolo':'SANZA · museo immersivo — la montagna e la Madonna della Neve',
+    'menu.apri':'Apri il menu','mappa.titolo':'Mappa: da Sanza al Monte Cervati',
+    'video.vai':'Avvia o ferma il video',
+    'z.piu':'Avvicina il modello','z.meno':'Allontana il modello','z.pieno':'Schermo intero',
+    'rail.faggeta':'faggeta','pano.carica':'Caricamento…',
+    '3d.err.file':'Il modello 3D non si carica aprendo il file con doppio clic:<br>il browser blocca la lettura del <code>.glb</code> da <code>file://</code>.<br>Serve un server locale — vedi <em>«Aprirlo in locale»</em> nel README.',
+    '3d.err':'Modello 3D non disponibile.<br>Verificare che <code>assets/3d/</code> sia stato caricato insieme alla pagina.',
+  },
+  en:{
+    'titolo':'SANZA · immersive museum — the mountain and Our Lady of the Snows',
+    'menu.apri':'Open the menu','mappa.titolo':'Map: from Sanza to Monte Cervati',
+    'video.vai':'Play or pause the video',
+    'z.piu':'Zoom in','z.meno':'Zoom out','z.pieno':'Full screen',
+    'rail.faggeta':'beech forest','pano.carica':'Loading…',
+    '3d.err.file':'The 3D model cannot load when the file is opened with a double click:<br>the browser blocks reading the <code>.glb</code> from <code>file://</code>.<br>A local server is needed — see the README.',
+    '3d.err':'3D model not available.<br>Check that <code>assets/3d/</code> was uploaded together with the page.',
+  },
+};
+const t=k=>TESTI[lingua][k];
+
+const IT={};   // l'italiano letto dalla pagina, chiave per chiave
+function traduci(){
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const k=el.dataset.t;
+    if(!(k in IT))IT[k]=el.innerHTML;
+    el.innerHTML=lingua==='en'&&EN[k]!=null?EN[k]:IT[k];
+  });
+  document.querySelectorAll('[data-t-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.tAria)));
+  document.querySelectorAll('[data-t-title]').forEach(el=>el.setAttribute('title',t(el.dataset.tTitle)));
+}
+/* Cambia lingua. Chi ha testi propri (mappa, video, righello) ascolta
+   l'evento 'lingua' e si aggiorna da sé. */
+function imposta(l){
+  lingua=l==='en'?'en':'it';
+  radice.lang=lingua;
+  traduci();
+  document.title=t('titolo');
+  document.querySelectorAll('.lingue [data-lingua]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lingua===lingua?'true':'false'));
+  try{sessionStorage.setItem('lingua',lingua);}catch{}
+  document.dispatchEvent(new Event('lingua'));
+}
+
+/* ============================================================
+   BENVENUTO — finché non si sceglie la lingua il sito sotto è
+   fermo (inert): niente tabulazione né lettori di schermo dietro
+   la schermata. Scelta la lingua si entra; sul totem ci si torna
+   da soli dopo un po' di inattività (vedi in fondo).
+   ============================================================ */
+const benvenuto=document.getElementById('benvenuto');
+const sotto=[...document.querySelectorAll('.istituzionale,#rail,main,footer')];
+const dentro=()=>radice.classList.contains('entrato');
+function entra(l){
+  imposta(l);
+  radice.classList.add('entrato');
+  sotto.forEach(e=>e.inert=false);benvenuto.inert=true;
+  document.dispatchEvent(new Event('entrata'));
+}
+benvenuto.addEventListener('click',e=>{const b=e.target.closest('[data-lingua]');if(b)entra(b.dataset.lingua);});
+document.querySelector('.lingue').addEventListener('click',e=>{
+  const b=e.target.closest('[data-lingua]');if(b&&b.dataset.lingua!==lingua)imposta(b.dataset.lingua);
+});
+if(dentro()){benvenuto.inert=true;if(lingua==='en')imposta('en');}
+else sotto.forEach(e=>e.inert=true);
+
 /* ============================================================
    IMMAGINI 360 — riprese Ricoh Theta X, equirettangolari 2:1.
    Ridotte da 11008×5504 a 4096×2048: a questa dimensione la densità
@@ -472,28 +754,47 @@ const PANO_GROTTA    = 'assets/360/grotta.jpg';
 
 /* ============================================================
    VIDEO — riprese d'archivio del pellegrinaggio.
-   Ogni slot: {src, poster, titolo}. src = file locale (MP4/WebM)
+   Ogni slot: {src, poster, titolo:{it,en}}. src = file locale (MP4/WebM)
    oppure URL embed (YouTube/Vimeo), riconosciuto in automatico.
    preload='none' + poster: il file parte solo al play dell'utente.
    ============================================================ */
 const VIDEO_NOTTE = {
   src:'assets/video/marunnari-notte.mp4',
   poster:'assets/video/marunnari-notte.jpg',
-  titolo:'La salita notturna dei marunnari — riprese d’archivio'
+  titolo:{it:'La salita notturna dei marunnari — riprese d’archivio',
+          en:'The night climb of the marunnari — archive footage'}
 };
 const VIDEO_VETTA = {
   src:'assets/video/marunnari-vetta.mp4',
   poster:'assets/video/marunnari-vetta.jpg',
-  titolo:'L’apertura della stipa e l’incoronazione in vetta — riprese d’archivio'
+  titolo:{it:'L’apertura della stipa e l’incoronazione in vetta — riprese d’archivio',
+          en:'The opening of the stipa and the crowning on the summit — archive footage'}
 };
 function montaVideo(id,v){
   const box=document.getElementById(id);if(!box)return;
   if(!v||!v.src){box.innerHTML='<div class="ph"><div class="play">▶</div><div class="txt">Slot video pronto — imposta <b>src</b> con il tuo file (MP4/WebM) o un embed YouTube/Vimeo</div></div>';return;}
-  const t=(v.titolo||'').replace(/"/g,'&quot;');
   if(/youtube|youtu\.be|vimeo/.test(v.src)){
-    box.innerHTML='<iframe src="'+v.src+'" title="'+t+'" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';return;
+    box.innerHTML='<iframe src="'+v.src+'" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+  }else{
+    box.innerHTML='<video '+(TOTEM?'disablepictureinpicture':'controls')+' playsinline preload="none"'+(v.poster?' poster="'+v.poster+'"':'')+'><source src="'+v.src+'" type="video/mp4"></video>';
+    if(TOTEM)comandiTotem(box);
   }
-  box.innerHTML='<video controls playsinline preload="none" title="'+t+'"'+(v.poster?' poster="'+v.poster+'"':'')+'><source src="'+v.src+'" type="video/mp4"></video>';
+  const titola=()=>{box.firstElementChild.title=(v.titolo&&v.titolo[lingua])||'';};
+  titola();document.addEventListener('lingua',titola);
+}
+/* sul totem: un tocco sul video lo avvia o lo ferma, e basta (vedi lo stile
+   di .vai). A fine video torna la copertina. */
+function comandiTotem(box){
+  const video=box.querySelector('video'),cornice=box.parentElement;
+  const vai=document.createElement('button'),barra=document.createElement('div');
+  vai.type='button';vai.className='vai';vai.dataset.tAria='video.vai';vai.setAttribute('aria-label',t('video.vai'));
+  barra.className='avanza';
+  box.append(vai,barra);
+  vai.addEventListener('click',()=>{if(video.paused)video.play();else video.pause();});
+  const stato=()=>cornice.classList.toggle('in-corso',!video.paused&&!video.ended);
+  ['play','pause','emptied'].forEach(ev=>video.addEventListener(ev,stato));
+  video.addEventListener('ended',()=>video.load());
+  ['timeupdate','emptied'].forEach(ev=>video.addEventListener(ev,()=>{barra.style.width=(video.duration?video.currentTime/video.duration*100:0)+'%';}));
 }
 montaVideo('video-marunnari',VIDEO_NOTTE);
 montaVideo('video-vetta',VIDEO_VETTA);
@@ -534,15 +835,18 @@ function skyline(svg,moduli,fill,cut,accenti,coda){
   svg.innerHTML=parts;
 }
 skyline(document.getElementById('skyHero'),3,'#f5f7f4','#0c1a21',{2:'#FFA300',9:'#FFA300',15:'#FFA300'});
+skyline(document.getElementById('skyBenvenuto'),3,'#f5f7f4','#0c1a21',{2:'#FFA300',9:'#FFA300',15:'#FFA300'});
 skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:'#FFA300',15:'#FFA300'});
 
 /* Cielo del hero: notte stellata e torce dei marunnari.
    Niente silhouette della montagna e niente crinale, nemmeno come traccia:
    le torce sono sparse a caso nel cielo, non allineate su un profilo che non
    viene disegnato. Rispetto alle stelle sono più grandi, gialle e con un
-   alone, e pulsano più in fretta: si distinguono da sole. */
-(function(){
-  const cv=document.getElementById('cielo-hero'),ctx=cv.getContext('2d');let stelle=[],torce=[];
+   alone, e pulsano più in fretta: si distinguono da sole.
+   Lo stesso cielo sta nel benvenuto e nell'hero: si anima solo quello che
+   in quel momento si vede (visibile), l'altro resta fermo. */
+function cielo(cv,visibile){
+  const ctx=cv.getContext('2d');let stelle=[],torce=[];
   function resize(){cv.width=cv.offsetWidth*devicePixelRatio;cv.height=cv.offsetHeight*devicePixelRatio;
     /* stelle e torce riempiono tutto il cielo, a caso */
     stelle=Array.from({length:300},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.3+0.3,a:Math.random()}));
@@ -552,9 +856,11 @@ skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:
     torce.forEach(p=>{const fl=0.6+0.4*Math.sin(time/250+p.off);ctx.globalAlpha=0.85*fl;ctx.fillStyle='#FFA300';ctx.shadowColor='#FFA300';ctx.shadowBlur=10*devicePixelRatio;ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.r*devicePixelRatio,0,7);ctx.fill();ctx.shadowBlur=0;});
     ctx.globalAlpha=1;}
   const ridotto=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  function loop(t){draw(t);if(!ridotto)requestAnimationFrame(loop);}
+  function loop(t){if(visibile())draw(t);if(!ridotto)requestAnimationFrame(loop);}
   addEventListener('resize',resize);resize();requestAnimationFrame(loop);
-})();
+}
+cielo(document.getElementById('cielo-hero'),dentro);
+cielo(document.getElementById('cielo-benvenuto'),()=>!dentro());
 
 /* L'hero e' alto quanto lo schermo meno la testata: la misura va scritta in
    una variabile CSS, perche' la barra cambia altezza col margine responsivo. */
@@ -574,12 +880,44 @@ skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:
   menu.addEventListener('click',e=>{if(e.target.tagName==='A')chiudi();});
   document.addEventListener('click',e=>{if(!testata.contains(e.target))chiudi();});
   addEventListener('keydown',e=>{if(e.key==='Escape')chiudi();});
+  document.addEventListener('ritorno',chiudi);
+
+  /* --k: quanto vale il rem del totem rispetto ai 16 px di sempre */
+  if(TOTEM){
+    const scala=()=>{radice.style.setProperty('--k',parseFloat(getComputedStyle(radice).fontSize)/16);misura();};
+    addEventListener('resize',scala);scala();
+  }
 })();
 
-/* la mappa si attiva al tocco: prima il dito scorre la pagina */
+/* la mappa si attiva al tocco: prima il dito scorre la pagina.
+   L'indirizzo lo mette lo script, perché cambia con la lingua (hl=). */
 (function(){
-  const box=document.getElementById('mappa-cont'),b=box&&box.querySelector('.attiva-mappa');
-  if(b)b.addEventListener('click',()=>box.classList.add('attiva'));
+  const box=document.getElementById('mappa-cont'),b=box.querySelector('.attiva-mappa'),f=box.querySelector('iframe');
+  b.addEventListener('click',()=>box.classList.add('attiva'));
+  const carica=()=>{
+    const src=`https://www.google.com/maps?ll=40.2795,15.5085&z=12&t=p&hl=${lingua}&output=embed`;
+    if(f.getAttribute('src')!==src)f.src=src;
+  };
+  if(!TOTEM){carica();document.addEventListener('lingua',carica);return;}
+
+  /* Sul totem la mappa è l'unico pezzo che dipende da internet, e due cose
+     non devono succedere. Uno: che un tocco su «Visualizza mappa più grande»
+     apra una finestra di Google sopra il museo — la sandbox senza
+     allow-popups lo impedisce. Due: che senza rete resti un riquadro grigio
+     — prima di caricarla si prova la connessione, e se non c'è la mappa
+     sparisce: restano le tre tappe qui sotto, che dicono le stesse cose. */
+  f.setAttribute('sandbox','allow-scripts allow-same-origin');
+  async function prova(){
+    try{
+      await fetch('https://www.google.com/generate_204',{mode:'no-cors',cache:'no-store'});
+      box.hidden=false;carica();
+    }catch{box.hidden=true;}
+  }
+  box.hidden=true;prova();
+  document.addEventListener('lingua',prova);
+  addEventListener('online',prova);
+  addEventListener('offline',()=>{box.hidden=true;});
+  document.addEventListener('ritorno',()=>box.classList.remove('attiva'));
 })();
 
 /* ============================================================
@@ -594,7 +932,9 @@ skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:
 (function(){
   const fill=document.getElementById('fill'),marker=document.getElementById('marker'),quota=document.getElementById('quota'),rail=document.getElementById('rail');
   const MIN=558,MAX=1898,frazione=m=>(m-MIN)/(MAX-MIN);
-  [[558,'Sanza'],[1000,'faggeta'],[1500,'Vallevona'],[1898,'Cervati']].forEach(([m,nome])=>{const t=document.createElement('div');t.className='tacca';t.style.bottom=`calc(7rem + ${frazione(m)} * (100% - 14rem))`;t.innerHTML=`<span>${m} · ${nome}</span>`;rail.appendChild(t);});
+  [[558,'Sanza'],[1000,''],[1500,'Vallevona'],[1898,'Cervati']].forEach(([m,nome])=>{const el=document.createElement('div');el.className='tacca';el.style.bottom=`calc(7rem + ${frazione(m)} * (100% - 14rem))`;
+    const scrivi=()=>{el.innerHTML=`<span>${m} · ${nome||t('rail.faggeta')}</span>`;};
+    scrivi();if(!nome)document.addEventListener('lingua',scrivi);rail.appendChild(el);});
 
   /* ancoraggi: sezione → quota che deve leggersi quando la sezione comincia.
      Il santuario (#tresd) non ha una quota propria dichiarata e resta
@@ -623,6 +963,8 @@ skyline(document.getElementById('skyFoot'),3,'#0092BC','#f3ece0',{2:'#FFA300',8:
   addEventListener('scroll',up,{passive:true});
   addEventListener('resize',()=>{misura();up();});
   addEventListener('load',()=>{misura();up();});
+  /* cambiando lingua i testi cambiano lunghezza, e le sezioni si spostano */
+  document.addEventListener('lingua',()=>{misura();up();});
   misura();up();
 })();
 
@@ -668,7 +1010,8 @@ const HFOV_APERTO=100;
 function avviaPano(id,file,generatore,hotSpots,opt){
   if(typeof pannellum==='undefined')return;
   pannellum.viewer(id,Object.assign({type:'equirectangular',panorama:file||generatore(),autoLoad:true,autoRotate:-1.5,compass:false,
-    showZoomCtrl:true,mouseZoom:false,doubleClickZoom:false,hfov:HFOV_APERTO,maxHfov:HFOV_APERTO,hotSpots:hotSpots},opt||{}));
+    showZoomCtrl:true,mouseZoom:false,doubleClickZoom:false,hfov:HFOV_APERTO,maxHfov:HFOV_APERTO,hotSpots:hotSpots,
+    strings:{loadingLabel:t('pano.carica')}},opt||{}));
 }
 function lazy(id,cb){new IntersectionObserver((es,io)=>es.forEach(e=>{if(e.isIntersecting){cb();io.unobserve(e.target);}}),{rootMargin:'200px'}).observe(document.getElementById(id));}
 
@@ -714,7 +1057,7 @@ function initThree(){if(tre||typeof THREE==='undefined')return;tre=true;
 
   const gltf=new THREE.GLTFLoader();
   if(window.MeshoptDecoder) gltf.setMeshoptDecoder(MeshoptDecoder);
-  if(THREE.DRACOLoader){const d=new THREE.DRACOLoader();d.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');gltf.setDRACOLoader(d);}
+  if(THREE.DRACOLoader){const d=new THREE.DRACOLoader();d.setDecoderPath('assets/vendor/three/libs/draco/');gltf.setDRACOLoader(d);}
   gltf.load(MODELLO_3D,g=>{
     const o=g.scene;
     /* il rilievo arriva in unità e origine arbitrarie: si normalizza a
@@ -732,9 +1075,7 @@ function initThree(){if(tre||typeof THREE==='undefined')return;tre=true;
     /* Aprendo la pagina con doppio clic (file://) il browser blocca via CORS
        l'XHR del .glb: il 3D è l'unica parte che lo richiede, così video e 360
        funzionano e sembra un problema del modello. Lo si dice esplicitamente. */
-    stato.innerHTML = location.protocol==='file:'
-      ? '<span class="err">Il modello 3D non si carica aprendo il file con doppio clic:<br>il browser blocca la lettura del <code>.glb</code> da <code>file://</code>.<br>Serve un server locale — vedi <em>«Come aprire il sito in locale»</em> a fine pagina.</span>'
-      : '<span class="err">Modello 3D non disponibile.<br>Verificare che <code>assets/3d/</code> sia stato caricato insieme alla pagina.</span>';
+    stato.innerHTML='<span class="err">'+t(location.protocol==='file:'?'3d.err.file':'3d.err')+'</span>';
   });
 
   /* dist: distanza d'orbita. L'altezza inquadrata è 2·dist·tan(fov/2) ≈ 0.73·dist,
@@ -785,6 +1126,110 @@ function initThree(){if(tre||typeof THREE==='undefined')return;tre=true;
   requestAnimationFrame(frame);
 }
 lazy('viewer3d',initThree);
+
+/* ============================================================
+   TOTEM — ritorno al benvenuto dopo un po' di inattività
+   ------------------------------------------------------------
+   Se per ATTESA secondi nessuno tocca lo schermo e nessun video
+   è in riproduzione, compare «Sei ancora qui?» con un conto alla
+   rovescia di PREAVVISO secondi: chi sta solo leggendo tocca e
+   resta dov'è. Altrimenti si torna alla schermata di benvenuto,
+   con la pagina riportata in cima e i video fermi.
+   Finché un video va, il tempo non scorre: si riparte da zero
+   quando finisce o viene messo in pausa. La rotazione lenta dei
+   360 e della statua non conta come riproduzione.
+   ATTESA si regola dall'indirizzo, senza toccare il codice:
+   ?totem=1&attesa=90 (in secondi, minimo 20).
+   ============================================================ */
+if(TOTEM)(function(){
+  const ATTESA=Math.max(20,+new URLSearchParams(location.search).get('attesa')||120),PREAVVISO=15;
+  const avviso=document.getElementById('avviso'),conto=document.getElementById('avviso-conto');
+  let ultimo=Date.now();
+  const segna=()=>{ultimo=Date.now();avviso.classList.remove('on');};
+  ['pointerdown','pointermove','touchstart','wheel','keydown','scroll'].forEach(ev=>addEventListener(ev,segna,{passive:true,capture:true}));
+  /* un tocco dentro la mappa non arriva alla pagina (è un altro sito in
+     iframe): si vede solo che la pagina ha perso il fuoco, e vale come tocco */
+  addEventListener('blur',segna);
+  document.addEventListener('entrata',segna);
+  const inRiproduzione=()=>[...document.querySelectorAll('video')].some(v=>!v.paused&&!v.ended);
+
+  function torna(){
+    avviso.classList.remove('on');
+    if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+    document.querySelectorAll('video').forEach(v=>{v.pause();v.load();});   // load() rimette il poster
+    if(document.activeElement)document.activeElement.blur();
+    history.replaceState(null,'',location.pathname+location.search);       // via l'ancora (#vallevona…)
+    scrollTo({top:0,left:0,behavior:'instant'});
+    radice.classList.remove('entrato');
+    sotto.forEach(e=>e.inert=true);benvenuto.inert=false;
+    document.dispatchEvent(new Event('ritorno'));
+    imposta('it');
+    setTimeout(ricarica,1500);
+  }
+  /* Tornati al benvenuto si ricarica la pagina, per due ragioni: i 360 e il
+     3D ripartono dalla vista iniziale e liberano la memoria grafica, e il
+     totem prende da solo le modifiche pubblicate (il service worker serve la
+     copia in cache e intanto scarica quella nuova: senza mai ricaricare, non
+     la mostrerebbe mai). Solo se la pagina è davvero in cache: senza rete e
+     senza cache una ricarica lascerebbe il totem su una pagina d'errore. */
+  async function ricarica(){
+    if(dentro())return;                       // nel frattempo qualcuno è entrato
+    try{
+      if(!navigator.serviceWorker||!navigator.serviceWorker.controller)return;
+      if(await caches.match(location.pathname))location.reload();
+    }catch{}
+  }
+
+  setInterval(()=>{
+    if(!dentro())return;
+    if(inRiproduzione()){ultimo=Date.now();return;}
+    const fermo=(Date.now()-ultimo)/1000;
+    if(fermo>=ATTESA+PREAVVISO)torna();
+    else if(fermo>=ATTESA){
+      /* il preavviso sta nella pagina: a schermo intero non si vedrebbe */
+      if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+      conto.textContent=Math.ceil(ATTESA+PREAVVISO-fermo);
+      avviso.classList.add('on');
+    }
+  },1000);
+
+  /* Piccole chiusure da chiosco: niente menu del tasto destro (la pressione
+     lunga sul touch), niente link che portano fuori dal sito, la pagina
+     riparte sempre dall'inizio e chiede al browser di non sgomberare la
+     cache quando il disco si riempie. */
+  addEventListener('contextmenu',e=>e.preventDefault());
+  document.querySelectorAll('a[href^="http"]').forEach(a=>a.removeAttribute('href'));
+  history.scrollRestoration='manual';
+  if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+})();
+
+/* ============================================================
+   SERVICE WORKER — il sito continua a funzionare senza rete
+   ------------------------------------------------------------
+   Pensato per il totem del museo, dove la connessione va e viene:
+   dopo la prima apertura la pagina si serve dalla cache. Da file://
+   la registrazione non è permessa e si salta senza far rumore.
+   Con ?totem=1 chiede anche il precarico di video, 360 e 3D (~35 MB):
+   fuori da quel caso i media entrano in cache solo se guardati, così
+   chi apre il sito dal telefono non si scarica il museo intero.
+   ============================================================ */
+if('serviceWorker' in navigator && location.protocol!=='file:'){
+  addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      const totem=new URLSearchParams(location.search).has('totem');
+      if(!totem) return;
+      navigator.serviceWorker.addEventListener('message',e=>{
+        if(e.data&&e.data.tipo==='precarico')
+          console.log(`[totem] media in cache: ${e.data.fatti}/${e.data.totale}`
+            +(e.data.mancanti?` — ${e.data.mancanti} non scaricati, riprovo al prossimo avvio`:' — pronto anche offline'));
+      });
+      const chiedi=()=>(navigator.serviceWorker.controller||reg.active)?.postMessage('precarica-tutto');
+      if(navigator.serviceWorker.controller) chiedi();
+      else navigator.serviceWorker.ready.then(chiedi);
+    }).catch(e=>console.warn('service worker non registrato:',e));
+  });
+}
 </script>
 </body>
 </html>
