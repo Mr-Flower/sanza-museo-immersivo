@@ -385,13 +385,16 @@ html.entrato .benvenuto{opacity:0;visibility:hidden;pointer-events:none}
    L'impaginazione è quella verticale del telefono: niente righello,
    menu a tendina, schede in colonna. Le media query ragionano in pixel
    e sul totem non scatterebbero, quindi quelle regole sono ripetute qui.
-   I margini laterali sono stretti (--margine, ~3 cm in tutto su 52 di
-   schermo): il totem si guarda da fermi, e la larghezza serve al testo.
+   I margini laterali sono minimi (--margine, meno di un centimetro per
+   lato): il totem si guarda da fermi, e la larghezza serve al testo.
    --k è il rapporto fra il rem del totem e i 16 px normali: lo scrive
    lo script e serve a ingrandire i pochi comandi disegnati in pixel.
    ============================================================ */
-html.totem{font-size:calc(100vw / 37);--rail-w:0px;--margine:1.1rem;touch-action:pan-x pan-y;overscroll-behavior:none;scrollbar-width:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+html.totem{font-size:calc(100vw / 37);--rail-w:0px;--margine:.5rem;touch-action:pan-x pan-y;overscroll-behavior:none;scrollbar-width:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 html.totem::-webkit-scrollbar{display:none}
+/* la colonna di 1010 px del sito normale qui sarebbe essa stessa un margine */
+html.totem .sez,html.totem #hero .testa{max-width:none}
+html.totem .sez p{max-width:none}
 html.totem #rail{display:none}
 html.totem main,html.totem footer{margin-left:0}
 html.totem .apri-menu{display:flex;zoom:var(--k,1)}
