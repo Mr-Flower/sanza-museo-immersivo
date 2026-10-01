@@ -41,9 +41,13 @@ Nessun backend. È pubblicato con **GitHub Pages** dal branch `main`, root del r
 ## Totem del museo
 
 Il sito gira su un totem verticale touch (9:16, 42") collegato a un PC Windows.
-Si apre l'indirizzo pubblico di GitHub Pages con **`?totem=1`** in coda, così una
-modifica pubblicata con un push arriva al totem da sola, senza mettere mano alla
-macchina in sala. `?totem=1` cambia quattro cose rispetto al sito normale:
+Ci sono due modi per metterlo in sala, descritti più sotto: l'**eseguibile**
+`Sanza-Museo.exe`, che ha tutto dentro e non chiede né browser né rete (è quello
+consigliato), oppure il **sito online** aperto in Chrome a schermo intero.
+
+In entrambi i casi la pagina è la stessa, aperta in **modalità totem**: quella
+che si ottiene aggiungendo `?totem=1` all'indirizzo (l'exe lo fa da solo).
+Rispetto al sito normale cambia questo:
 
 - **Testi grandi.** L'unità di base è legata alla larghezza dello schermo
   (`1rem = 1/37` della larghezza, ~29 px su un pannello da 1080): il corpo del
@@ -51,6 +55,12 @@ macchina in sala. `?totem=1` cambia quattro cose rispetto al sito normale:
   pannello. Per ingrandire o rimpicciolire tutto insieme si cambia quel `37` in
   `html.totem{font-size:calc(100vw / 37)}` — più basso, più grande.
   L'impaginazione è quella verticale del telefono.
+- **Stesso aspetto su Full HD, 2K e 4K.** Sul totem non c'è nessuna misura in
+  pixel fissi: testi, margini (il 3% della larghezza per lato, `--margine` in
+  `html.totem`), pulsanti e visori sono tutti in proporzione allo schermo. Un
+  pannello 1080×1920, uno 1440×2560 e uno 2160×3840 mostrano la stessa pagina,
+  solo più o meno nitida. Lo schermo va tenuto **in verticale**: in orizzontale
+  la pagina funziona ma tutto risulta enorme.
 - **Ritorno al benvenuto.** Dopo un minuto senza tocchi e senza video in
   riproduzione si torna alla schermata di scelta della lingua; negli ultimi 15
   secondi compare «Sei ancora qui?» con il conto alla rovescia. Il tempo si
@@ -62,8 +72,13 @@ macchina in sala. `?totem=1` cambia quattro cose rispetto al sito normale:
 - **Comandi da sala.** Video con un solo comando grande (un tocco avvia, un
   tocco ferma), pulsanti dei 360 e del 3D ingranditi, niente selezione del
   testo né menu della pressione lunga, link verso altri siti spenti.
-- **Tutto in cache.** Video, panorami e modello 3D (~35 MB) vengono scaricati
-  subito, per reggere senza rete (vedi sotto).
+- **Tutto in cache** (solo per il sito online; nell'exe i file sono già sul
+  disco). Video, panorami e modello 3D (~35 MB) vengono scaricati subito, per
+  reggere senza rete (vedi «Senza rete»).
+
+Per provare la modalità totem dal proprio computer basta aprire
+<https://mr-flower.github.io/sanza-museo-immersivo/?totem=1> e stringere la
+finestra in verticale.
 
 ### L'eseguibile (consigliato)
 
@@ -160,12 +175,15 @@ chiosco. Va bene per una prova, per la sala è meglio il `.bat`.
 
 ### Senza rete
 
+(Questa parte riguarda il sito online, aperto con `totem.bat` o da un browser.
+L'eseguibile non ne ha bisogno: non usa la rete affatto.)
+
 Niente CDN: pannellum, three e i due caratteri stanno in `assets/vendor/`
 (versioni congelate — pannellum 2.5.6, three r128, sottoinsiemi latin e
 latin-ext), così una rete che cade non lascia i 360 muti e i testi con il
 carattere sbagliato. Sopra c'è `sw.js`, che tiene in cache la pagina intera:
-dopo la prima apertura il totem lavora offline, anche se viene acceso senza
-rete, e si riallinea da solo quando la connessione torna. Un push si vede al
+dopo la prima apertura il sito online lavora offline, anche se il totem viene
+acceso senza rete, e si riallinea da solo quando la connessione torna. Un push si vede al
 secondo ritorno al benvenuto: al primo la versione nuova viene scaricata, a
 quello dopo viene mostrata.
 
