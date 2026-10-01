@@ -219,6 +219,13 @@ si scrive l'italiano nella pagina, gli si dà una chiave, e si mette la stessa
 chiave in `EN`. Le poche frasi generate dallo script e le etichette per i
 lettori di schermo stanno in `TESTI`, nelle due lingue.
 
+In inglese cambia anche il marchio di hero e piede: il payoff diventa «the
+village of hospitality» (`<symbol>` `#mk-museo-en`). Il brand book non prevede
+un payoff inglese e il Divenire non è disponibile, quindi lì il payoff è testo
+nel carattere della pagina, non il tracciato ufficiale; logotipo e parola
+«museo» restano quelli del marchio. La schermata di benvenuto, che è bilingue,
+tiene il marchio originale.
+
 ## Da completare prima di pubblicare
 
 - **Crediti**: panorami 360° e rilievo 3D sono accreditati al **Centro ICT per i Beni
