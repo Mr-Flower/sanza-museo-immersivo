@@ -29,6 +29,7 @@ assets/logo/            marchio ufficiale in SVG, estratto dal brand book
 assets/video/           riprese d'archivio (H.264 720p + poster JPG)
 assets/360/             panorami equirettangolari 4096×2048
 assets/3d/              rilievo fotogrammetrico della statua (GLB, meshopt)
+assets/mappa/           la carta della salita, immagine statica (vedi «Note tecniche»)
 assets/vendor/          pannellum, three e i caratteri: nessun CDN, vedi sotto
 risorse/                master originali — NON versionati, vedi .gitignore
 ```
@@ -50,12 +51,14 @@ macchina in sala. `?totem=1` cambia quattro cose rispetto al sito normale:
   pannello. Per ingrandire o rimpicciolire tutto insieme si cambia quel `37` in
   `html.totem{font-size:calc(100vw / 37)}` — più basso, più grande.
   L'impaginazione è quella verticale del telefono.
-- **Ritorno al benvenuto.** Dopo 120 secondi senza tocchi e senza video in
-  riproduzione compare «Sei ancora qui?» con un conto alla rovescia di 15
-  secondi, poi si torna alla schermata di scelta della lingua. Il tempo si
-  regola dall'indirizzo: `?totem=1&attesa=90` (secondi, minimo 20).
+- **Ritorno al benvenuto.** Dopo un minuto senza tocchi e senza video in
+  riproduzione si torna alla schermata di scelta della lingua; negli ultimi 15
+  secondi compare «Sei ancora qui?» con il conto alla rovescia. Il tempo si
+  regola dall'indirizzo: `?totem=1&attesa=90` (secondi, minimo 30).
   Tornata al benvenuto la pagina si ricarica: è così che il totem prende gli
-  aggiornamenti senza essere riavviato.
+  aggiornamenti senza essere riavviato. Al benvenuto si torna anche a mano,
+  dalla casetta in testata o dal pulsante in fondo alla pagina (anche fuori
+  dal totem).
 - **Comandi da sala.** Video con un solo comando grande (un tocco avvia, un
   tocco ferma), pulsanti dei 360 e del 3D ingranditi, niente selezione del
   testo né menu della pressione lunga, link verso altri siti spenti.
@@ -86,8 +89,6 @@ Si scarica sempre da qui, ed è sempre l'ultima versione:
   compilato. A ogni push su `main` GitHub ricompila l'exe da solo (Actions →
   «Eseguibile del totem», una decina di minuti) e lo rimette all'indirizzo qui
   sopra: per aggiornare il totem si scarica di nuovo e si sostituisce il file.
-- La mappa di Google compare solo se il PC ha la rete; senza, restano le tre
-  tappe (vedi «Senza rete»).
 
 Il codice sta in `totem-app/` (Electron): `main.js` apre la finestra e serve i
 file del sito da un indirizzo interno, `app://sanza/`. Per provarlo o compilarlo
@@ -178,12 +179,8 @@ anche staccato.
 Quando cambiano i media o le librerie va aggiornato l'elenco in cima a `sw.js`
 e alzata la costante `VERSIONE`, altrimenti il totem resta sui vecchi file.
 
-L'unico pezzo che dipende da internet è la **mappa Google in iframe**. Sul
-totem, se la rete manca, il riquadro della mappa sparisce e restano le tre
-tappe sotto; se la rete c'è la mappa si vede, chiusa in una sandbox che le
-impedisce di aprire finestre di Google sopra il museo. Se il totem lavorerà
-sempre senza connessione conviene sostituirla con un'immagine statica del
-percorso.
+Nel sito non c'è più niente che dipenda da internet: anche la mappa è
+un'immagine del repo (vedi «Note tecniche»).
 
 Se in sala non ci sarà **mai** rete, nemmeno la prima volta, l'indirizzo
 pubblico non basta: va copiata la cartella del sito sul PC e servita in locale
@@ -242,6 +239,15 @@ lettori di schermo stanno in `TESTI`, nelle due lingue.
 - **Pittogramma casa**: la casetta del righello, dei nodi della mappa, della legenda e
   delle schede è la **A del marchio**, con la porticina ad arco — lo stesso tracciato del
   `<symbol>` `#casa`, applicato come maschera CSS così prende il colore da `currentColor`.
+- **Mappa**: non è Google Maps ma un'immagine, `assets/mappa/sanza-cervati.jpg`
+  (1515×1237), così funziona senza rete e il dito che ci passa sopra scorre la
+  pagina. È un ritaglio di OpenTopoMap a zoom 14 fra 15.445–15.575 E e
+  40.2245–40.3055 N; il credito «© OpenStreetMap contributors, SRTM · OpenTopoMap
+  (CC-BY-SA)» sta nell'angolo e **va lasciato**, è la condizione della licenza.
+  I tre nodi sono link posizionati in percentuale (`left`/`top`) sulle coordinate
+  di OpenStreetMap: Chiesa di Santa Maria Assunta (40.2422 N, 15.5518 E),
+  Affondatore di Vallivona (40.2629, 15.4702), santuario della Madonna della Neve
+  (40.2901, 15.4773). Se si cambia l'immagine vanno ricalcolate le percentuali.
 - **Rotella del mouse**: i 360 hanno `mouseZoom:false` e si aprono a `hfov 120` (il
   massimo di pannellum), così il puntatore che passa sopra un panorama non ruba lo
   scroll alla pagina; per avvicinarsi ci sono i pulsanti `+/−`. Il 3D invece zooma con

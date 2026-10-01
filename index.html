@@ -127,6 +127,10 @@ em{font-style:italic}
 .istituzionale .menu{display:flex;gap:1.5rem;font-size:.82rem;font-weight:600}
 .istituzionale .menu a{color:var(--pietra);text-decoration:none;transition:color .2s}
 .istituzionale .menu a:hover{color:var(--giallo)}
+/* ritorno al benvenuto: la casetta del marchio, che qui fa da «casa» */
+.torna{flex:none;width:2.3rem;height:2.3rem;padding:0;border:1px solid rgba(245,247,244,.25);border-radius:50%;background:none;color:var(--giallo);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
+.torna i{width:.85rem;height:1rem}
+.torna:hover{background:var(--giallo);color:var(--notte)}
 /* cambio lingua: sempre in testata, la lingua attiva è quella piena */
 .lingue{display:inline-flex;flex:none;border:1px solid rgba(245,247,244,.25);border-radius:99px;overflow:hidden}
 .lingue button{min-height:2.3rem;padding:0 .8rem;border:0;background:none;color:var(--pietra);font-family:var(--testo);font-weight:700;font-size:.74rem;letter-spacing:.12em;cursor:pointer;transition:background .2s,color .2s}
@@ -219,18 +223,29 @@ section{padding:clamp(4rem,9vw,6.5rem) var(--margine)}
 #cervati .viewer,#cervati .video-cornice{border-color:rgba(29,42,48,.18)}
 
 /* mappa */
-.mappa-cont{position:relative;margin-top:2.2rem;border:1px solid rgba(245,247,244,.14);border-radius:10px;overflow:hidden;background:var(--notte-2);aspect-ratio:16/9;min-height:340px}
-.mappa-cont iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.9)}
-/* Sul telefono il 16/9 diventa una feritoia larga e bassa, con la mappa
-   illeggibile: il riquadro si alza. E il trascinamento a un dito dentro la
-   mappa ruberebbe lo scorrimento alla pagina, come facevano i 360 prima di
-   mouseZoom:false, quindi la mappa resta inattiva finché non la si tocca. */
-.attiva-mappa{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-end;justify-content:center;padding:1.1rem;border:0;background:rgba(12,26,33,.28);color:var(--neve);font-family:var(--testo);font-size:.82rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.attiva-mappa span{background:rgba(12,26,33,.86);border:1px solid rgba(245,247,244,.2);border-radius:99px;padding:.55rem 1.1rem;backdrop-filter:blur(6px)}
-.mappa-cont.attiva .attiva-mappa{display:none}
-@media (hover:hover) and (pointer:fine){.attiva-mappa{display:none}}
+/* La mappa è un'immagine che sta nel sito (assets/mappa/), non un servizio
+   esterno: si vede anche senza rete e un dito che ci passa sopra scorre la
+   pagina, non la mappa. Il riquadro ha le proporzioni dell'immagine, così i
+   tre nodi — piazzati in percentuale sulle coordinate vere — cadono sempre
+   nel punto giusto, a qualsiasi larghezza. */
+.mappa-cont{position:relative;margin-top:2.2rem;border:1px solid rgba(245,247,244,.14);border-radius:10px;overflow:hidden;background:var(--notte-2);aspect-ratio:1515/1237}
+.mappa-cont img{width:100%;height:100%;object-fit:cover;filter:saturate(.8) brightness(.94)}
+.mappa-cont .fonte{position:absolute;right:0;bottom:0;z-index:1;font-size:.56rem;font-weight:500;line-height:1.3;color:var(--inchiostro);background:rgba(245,247,244,.82);padding:.15rem .45rem;border-top-left-radius:6px}
+/* nodo: la casetta del marchio in un tondo, con il nome accanto. Il punto
+   della mappa è il centro del tondo; .sx mette l'etichetta a sinistra, per
+   il nodo vicino al bordo destro. */
+.nodo{position:absolute;z-index:2;width:0;height:0;text-decoration:none;color:var(--neve)}
+.nodo .pin{position:absolute;left:-1.15rem;top:-1.15rem;width:2.3rem;height:2.3rem;border-radius:50%;background:var(--notte);border:2px solid var(--giallo);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.45);animation:respiro 3.2s ease-in-out infinite;transition:transform .2s}
+.nodo .pin i{width:.95rem;height:1.1rem;color:var(--giallo)}
+.nodo .nome{position:absolute;left:1.5rem;top:0;transform:translateY(-50%);white-space:nowrap;background:rgba(12,26,33,.9);border-radius:6px;padding:.3rem .6rem;font-size:.8rem;font-weight:700;line-height:1.25;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.nodo.sx .nome{left:auto;right:1.5rem;text-align:right}
+.nodo .nome small{display:block;font-size:.85em;font-weight:500;color:var(--pietra)}
+.nodo:hover .pin,.nodo:active .pin{transform:scale(1.12)}
 @media (max-width:700px){
-  .mappa-cont{aspect-ratio:3/4;min-height:0;max-height:78vh}
+  .nodo .pin{left:-.9rem;top:-.9rem;width:1.8rem;height:1.8rem}
+  .nodo .pin i{width:.75rem;height:.85rem}
+  .nodo .nome{left:1.15rem;font-size:.68rem;padding:.2rem .45rem}
+  .nodo.sx .nome{right:1.15rem}
 }
 /* le tre tappe, che prima erano i nodi disegnati sulla mappa */
 .tappe{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem;margin-top:1.2rem}
@@ -239,11 +254,6 @@ section{padding:clamp(4rem,9vw,6.5rem) var(--margine)}
 .tappe b{color:var(--giallo);font-weight:800}
 .tappe span{grid-column:2;display:block;font-weight:500;font-size:.78rem;color:var(--pietra);margin-top:.15rem}
 .tappe .dot{grid-row:span 2;align-self:center}
-.nodo{cursor:pointer}
-.nodo .alone{fill:var(--giallo);opacity:0;transition:opacity .25s}
-.nodo:hover .alone,.nodo:focus .alone{opacity:.2}
-.nodo text{font-family:var(--testo);font-weight:600;font-size:11px;fill:var(--neve);paint-order:stroke;stroke:#0c1a21;stroke-width:3px}
-.nodo text.small{font-weight:500;fill:var(--pietra)}
 .legenda{display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:1.1rem;font-size:.8rem;font-weight:600;color:var(--pietra)}
 .legenda span{display:inline-flex;align-items:center;gap:.5rem}
 .dot{width:11px;height:13px;color:var(--giallo)}
@@ -324,6 +334,8 @@ footer .piede{padding:2.6rem var(--margine) 3rem;display:grid;grid-template-colu
 footer .marchio{--mk-h:3.2rem}
 footer .contatti{font-size:.84rem;font-weight:600;line-height:1.8;margin-top:1.1rem}
 footer .contatti a{color:var(--giallo)}
+footer .ricomincia{margin-top:1.6rem;display:inline-flex;align-items:center;gap:.7rem;padding:.9rem 1.6rem;border:0;border-radius:99px;background:var(--giallo);color:var(--notte);font-family:var(--testo);font-weight:700;font-size:.95rem;cursor:pointer}
+footer .ricomincia i{width:.85rem;height:1rem}
 footer .hash{font-weight:800;color:var(--giallo)}
 footer .credits{font-size:.66rem;font-weight:500;color:var(--pietra);line-height:1.7;text-align:right}
 @media (max-width:760px){footer .credits{text-align:left}}
@@ -390,9 +402,6 @@ html.totem .istituzionale .menu a{padding:.95rem var(--margine);color:var(--neve
 html.totem .istituzionale .menu a+a{border-top:1px solid rgba(245,247,244,.08)}
 html.totem #hero .claim{font-size:1.3rem}
 html.totem #hero .invito{font-size:1.1rem;padding:1.1rem 2.2rem}
-/* la mappa resta ferma finché non la si tocca, come sul telefono */
-html.totem .mappa-cont{aspect-ratio:1/1;min-height:0}
-html.totem .attiva-mappa{display:flex;font-size:.95rem}
 html.totem .tappe,html.totem .schede{grid-template-columns:1fr}
 html.totem .tappe a{font-size:1rem;padding:1rem 1.2rem}
 html.totem .tappe span{font-size:.88rem}
@@ -471,6 +480,7 @@ html.totem footer .contatti a{text-decoration:none}
   <nav class="menu" id="menu">
     <a href="#mappa" data-t="m.salita">La salita</a><a href="#religioso" data-t="m.marunnari">I marunnari</a><a href="#vallevona">Vallevona</a><a href="#tresd" data-t="m.santuario">Il santuario</a><a href="#cervati" data-t="m.vetta">La vetta</a>
   </nav>
+  <button class="torna" type="button" data-torna aria-label="Torna alla schermata di benvenuto" data-t-aria="torna"><i class="casa"></i></button>
   <div class="lingue" role="group" aria-label="Lingua · Language">
     <button type="button" data-lingua="it" aria-pressed="true" aria-label="Italiano">IT</button><button type="button" data-lingua="en" aria-pressed="false" aria-label="English">EN</button>
   </div>
@@ -506,8 +516,11 @@ html.totem footer .contatti a{text-decoration:none}
     <h2 class="rivela" data-t="mappa.h2">Dal borgo alla vetta più alta della Campania</h2>
     <p class="lede rivela" data-t="mappa.lede">Tre tappe lungo il cammino della Madonna della Neve: Sanza, dove la salita comincia; Vallevona, l'altopiano carsico a metà strada; la vetta del Cervati, con il suo santuario. A ogni tappa, un panorama immersivo a 360°.</p>
     <div class="mappa-cont rivela" id="mappa-cont">
-      <iframe title="Mappa: da Sanza al Monte Cervati" data-t-title="mappa.titolo" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-      <button class="attiva-mappa" type="button"><span data-t="mappa.tocca">Tocca per muovere la mappa</span></button>
+      <img src="assets/mappa/sanza-cervati.jpg" width="1515" height="1237" alt="Mappa: da Sanza al Monte Cervati" data-t-alt="mappa.titolo">
+      <a class="nodo sx" href="#religioso" style="left:82.15%;top:78.16%"><span class="pin"><i class="casa"></i></span><span class="nome">Sanza<small>558 m</small></span></a>
+      <a class="nodo" href="#vallevona" style="left:19.38%;top:52.61%"><span class="pin"><i class="casa"></i></span><span class="nome">Vallevona<small>~1500 m</small></span></a>
+      <a class="nodo" href="#cervati" style="left:24.85%;top:19.02%"><span class="pin"><i class="casa"></i></span><span class="nome">Monte Cervati<small>1898 m</small></span></a>
+      <span class="fonte">© OpenStreetMap contributors, SRTM · OpenTopoMap (CC-BY-SA)</span>
     </div>
     <ul class="tappe rivela">
       <li><a href="#religioso"><i class="dot casa"></i><b>Sanza</b> · 558 m<span data-t="tappa.1">la Chiesa Madre, dove la salita comincia</span></a></li>
@@ -597,6 +610,7 @@ html.totem footer .contatti a{text-decoration:none}
         <svg class="mk mk-full" viewBox="0 0 238.36 96.82" aria-hidden="true"><use href="#mk-museo"/></svg>
       </span>
       <div class="contatti"><a href="https://comune.sanza.sa.it">comune.sanza.sa.it</a> · <a href="https://scabec.it">scabec.it</a><div class="hash">#sanzaborgoaccoglienza</div></div>
+      <button class="ricomincia" type="button" data-torna><i class="casa"></i><span data-t="torna.testo">Torna alla schermata iniziale</span></button>
     </div>
     <div class="credits" data-t="piede.credits"><strong>Comune di Sanza</strong> · con Scabec — Società Campana Beni Culturali<br>Regione Campania · Finanziato dall'Unione europea — NextGenerationEU<br>Ministero della Cultura<br>Panorami 360° e rilievi 3D: <strong>Centro ICT per i Beni Culturali</strong> — Università degli Studi di Salerno<br>Riprese d’archivio: <strong>TeleCervati</strong><br><span style="opacity:.7">[spazio per i logo istituzionali ufficiali]</span></div>
   </div>
@@ -622,6 +636,7 @@ const CRED_360=`<span class="credito">360° imagery: Centro ICT per i Beni Cultu
 const CRED_ARCH=`<span class="credito">Archive footage: TeleCervati. [to be confirmed: year of filming · rights holder]</span>`;
 const EN={
   'm.salita':'The climb','m.marunnari':'The marunnari','m.santuario':'The sanctuary','m.vetta':'The summit',
+  'torna.testo':'Back to the welcome screen',
   'avviso.titolo':'Still there?','avviso.testo':'Touch the screen to continue',
 
   'hero.luogo':'Cilento, Vallo di Diano and Alburni National Park',
@@ -631,7 +646,6 @@ const EN={
   'mappa.eyebrow':'The climb',
   'mappa.h2':'From the village to the highest peak in Campania',
   'mappa.lede':`Three stages along the path of the Madonna della Neve: Sanza, where the climb begins; Vallevona, the karst plateau halfway up; the summit of Monte Cervati, with its sanctuary. At each stage, an immersive 360° panorama.`,
-  'mappa.tocca':'Touch to move the map',
   'tappa.1':'the Mother Church, where the climb begins',
   'tappa.2':'the karst plateau, halfway along the path',
   'tappa.3':'the sanctuary and the grotto of the Madonna',
@@ -680,7 +694,7 @@ const EN={
 const TESTI={
   it:{
     'titolo':'SANZA · museo immersivo — la montagna e la Madonna della Neve',
-    'menu.apri':'Apri il menu','mappa.titolo':'Mappa: da Sanza al Monte Cervati',
+    'torna':'Torna alla schermata di benvenuto','menu.apri':'Apri il menu','mappa.titolo':'Mappa: da Sanza al Monte Cervati',
     'video.vai':'Avvia o ferma il video',
     'z.piu':'Avvicina il modello','z.meno':'Allontana il modello','z.pieno':'Schermo intero',
     'rail.faggeta':'faggeta','pano.carica':'Caricamento…',
@@ -689,7 +703,7 @@ const TESTI={
   },
   en:{
     'titolo':'SANZA · immersive museum — the mountain and Our Lady of the Snows',
-    'menu.apri':'Open the menu','mappa.titolo':'Map: from Sanza to Monte Cervati',
+    'torna':'Back to the welcome screen','menu.apri':'Open the menu','mappa.titolo':'Map: from Sanza to Monte Cervati',
     'video.vai':'Play or pause the video',
     'z.piu':'Zoom in','z.meno':'Zoom out','z.pieno':'Full screen',
     'rail.faggeta':'beech forest','pano.carica':'Loading…',
@@ -707,7 +721,7 @@ function traduci(){
     el.innerHTML=lingua==='en'&&EN[k]!=null?EN[k]:IT[k];
   });
   document.querySelectorAll('[data-t-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.tAria)));
-  document.querySelectorAll('[data-t-title]').forEach(el=>el.setAttribute('title',t(el.dataset.tTitle)));
+  document.querySelectorAll('[data-t-alt]').forEach(el=>el.setAttribute('alt',t(el.dataset.tAlt)));
 }
 /* Cambia lingua. Chi ha testi propri (mappa, video, righello) ascolta
    l'evento 'lingua' e si aggiorna da sé. */
@@ -736,6 +750,23 @@ function entra(l){
   sotto.forEach(e=>e.inert=false);benvenuto.inert=true;
   document.dispatchEvent(new Event('entrata'));
 }
+/* Il ritorno: a mano (la casetta in testata, il pulsante in fondo alla
+   pagina) o da soli, sul totem, dopo un po' di inattività. La pagina torna
+   com'era all'inizio: in cima, video fermi, menu chiuso, lingua da scegliere. */
+function esci(){
+  if(!dentro())return;
+  if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+  document.querySelectorAll('video').forEach(v=>{v.pause();v.load();});   // load() rimette il poster
+  if(document.activeElement)document.activeElement.blur();
+  history.replaceState(null,'',location.pathname+location.search);       // via l'ancora (#vallevona…)
+  scrollTo({top:0,left:0,behavior:'instant'});
+  radice.classList.remove('entrato');
+  sotto.forEach(e=>e.inert=true);benvenuto.inert=false;
+  imposta('it');
+  try{sessionStorage.removeItem('lingua');}catch{}
+  document.dispatchEvent(new Event('ritorno'));
+}
+document.addEventListener('click',e=>{if(e.target.closest('[data-torna]'))esci();});
 benvenuto.addEventListener('click',e=>{const b=e.target.closest('[data-lingua]');if(b)entra(b.dataset.lingua);});
 document.querySelector('.lingue').addEventListener('click',e=>{
   const b=e.target.closest('[data-lingua]');if(b&&b.dataset.lingua!==lingua)imposta(b.dataset.lingua);
@@ -889,37 +920,6 @@ cielo(document.getElementById('cielo-benvenuto'),()=>!dentro());
     const scala=()=>{radice.style.setProperty('--k',parseFloat(getComputedStyle(radice).fontSize)/16);misura();};
     addEventListener('resize',scala);scala();
   }
-})();
-
-/* la mappa si attiva al tocco: prima il dito scorre la pagina.
-   L'indirizzo lo mette lo script, perché cambia con la lingua (hl=). */
-(function(){
-  const box=document.getElementById('mappa-cont'),b=box.querySelector('.attiva-mappa'),f=box.querySelector('iframe');
-  b.addEventListener('click',()=>box.classList.add('attiva'));
-  const carica=()=>{
-    const src=`https://www.google.com/maps?ll=40.2795,15.5085&z=12&t=p&hl=${lingua}&output=embed`;
-    if(f.getAttribute('src')!==src)f.src=src;
-  };
-  if(!TOTEM){carica();document.addEventListener('lingua',carica);return;}
-
-  /* Sul totem la mappa è l'unico pezzo che dipende da internet, e due cose
-     non devono succedere. Uno: che un tocco su «Visualizza mappa più grande»
-     apra una finestra di Google sopra il museo — la sandbox senza
-     allow-popups lo impedisce. Due: che senza rete resti un riquadro grigio
-     — prima di caricarla si prova la connessione, e se non c'è la mappa
-     sparisce: restano le tre tappe qui sotto, che dicono le stesse cose. */
-  f.setAttribute('sandbox','allow-scripts allow-same-origin');
-  async function prova(){
-    try{
-      await fetch('https://www.google.com/generate_204',{mode:'no-cors',cache:'no-store'});
-      box.hidden=false;carica();
-    }catch{box.hidden=true;}
-  }
-  box.hidden=true;prova();
-  document.addEventListener('lingua',prova);
-  addEventListener('online',prova);
-  addEventListener('offline',()=>{box.hidden=true;});
-  document.addEventListener('ritorno',()=>box.classList.remove('attiva'));
 })();
 
 /* ============================================================
@@ -1132,42 +1132,26 @@ lazy('viewer3d',initThree);
 /* ============================================================
    TOTEM — ritorno al benvenuto dopo un po' di inattività
    ------------------------------------------------------------
-   Se per ATTESA secondi nessuno tocca lo schermo e nessun video
-   è in riproduzione, compare «Sei ancora qui?» con un conto alla
-   rovescia di PREAVVISO secondi: chi sta solo leggendo tocca e
-   resta dov'è. Altrimenti si torna alla schermata di benvenuto,
-   con la pagina riportata in cima e i video fermi.
+   Se per ATTESA secondi (un minuto) nessuno tocca lo schermo e
+   nessun video è in riproduzione, si torna alla schermata di
+   benvenuto. Negli ultimi PREAVVISO secondi compare «Sei ancora
+   qui?» con il conto alla rovescia: chi sta solo leggendo tocca
+   e resta dov'è.
    Finché un video va, il tempo non scorre: si riparte da zero
    quando finisce o viene messo in pausa. La rotazione lenta dei
    360 e della statua non conta come riproduzione.
    ATTESA si regola dall'indirizzo, senza toccare il codice:
-   ?totem=1&attesa=90 (in secondi, minimo 20).
+   ?totem=1&attesa=90 (in secondi, minimo 30).
    ============================================================ */
 if(TOTEM)(function(){
-  const ATTESA=Math.max(20,+new URLSearchParams(location.search).get('attesa')||120),PREAVVISO=15;
+  const ATTESA=Math.max(30,+new URLSearchParams(location.search).get('attesa')||60),PREAVVISO=15;
   const avviso=document.getElementById('avviso'),conto=document.getElementById('avviso-conto');
   let ultimo=Date.now();
   const segna=()=>{ultimo=Date.now();avviso.classList.remove('on');};
   ['pointerdown','pointermove','touchstart','wheel','keydown','scroll'].forEach(ev=>addEventListener(ev,segna,{passive:true,capture:true}));
-  /* un tocco dentro la mappa non arriva alla pagina (è un altro sito in
-     iframe): si vede solo che la pagina ha perso il fuoco, e vale come tocco */
-  addEventListener('blur',segna);
   document.addEventListener('entrata',segna);
   const inRiproduzione=()=>[...document.querySelectorAll('video')].some(v=>!v.paused&&!v.ended);
 
-  function torna(){
-    avviso.classList.remove('on');
-    if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
-    document.querySelectorAll('video').forEach(v=>{v.pause();v.load();});   // load() rimette il poster
-    if(document.activeElement)document.activeElement.blur();
-    history.replaceState(null,'',location.pathname+location.search);       // via l'ancora (#vallevona…)
-    scrollTo({top:0,left:0,behavior:'instant'});
-    radice.classList.remove('entrato');
-    sotto.forEach(e=>e.inert=true);benvenuto.inert=false;
-    document.dispatchEvent(new Event('ritorno'));
-    imposta('it');
-    setTimeout(ricarica,1500);
-  }
   /* Tornati al benvenuto si ricarica la pagina, per due ragioni: i 360 e il
      3D ripartono dalla vista iniziale e liberano la memoria grafica, e il
      totem prende da solo le modifiche pubblicate (il service worker serve la
@@ -1183,15 +1167,17 @@ if(TOTEM)(function(){
     }catch{}
   }
 
+  document.addEventListener('ritorno',()=>{avviso.classList.remove('on');setTimeout(ricarica,1500);});
+
   setInterval(()=>{
     if(!dentro())return;
     if(inRiproduzione()){ultimo=Date.now();return;}
     const fermo=(Date.now()-ultimo)/1000;
-    if(fermo>=ATTESA+PREAVVISO)torna();
-    else if(fermo>=ATTESA){
+    if(fermo>=ATTESA){avviso.classList.remove('on');esci();}
+    else if(fermo>=ATTESA-PREAVVISO){
       /* il preavviso sta nella pagina: a schermo intero non si vedrebbe */
       if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
-      conto.textContent=Math.ceil(ATTESA+PREAVVISO-fermo);
+      conto.textContent=Math.ceil(ATTESA-fermo);
       avviso.classList.add('on');
     }
   },1000);

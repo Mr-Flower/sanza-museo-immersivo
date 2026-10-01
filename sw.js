@@ -10,7 +10,7 @@
    Due livelli, perché lo stesso indirizzo lo aprono anche i
    visitatori dal telefono:
 
-   GUSCIO    pagina, librerie e caratteri (~1,5 MB). Precaricato
+   GUSCIO    pagina, librerie, caratteri e mappa (~2 MB). Precaricato
              sempre, per tutti: è poco e vale anche in mobilità.
    MEDIA     video, panorami 360 e modello 3D (~35 MB). NON si
              precaricano da soli — sarebbero 35 MB addosso a chi
@@ -27,7 +27,7 @@
    sotto e alza VERSIONE, altrimenti il totem resta sui vecchi.
    ============================================================ */
 
-const VERSIONE = 'sanza-museo-v1';
+const VERSIONE = 'sanza-museo-v2';
 
 const GUSCIO = [
   './',
@@ -50,6 +50,7 @@ const GUSCIO = [
   './assets/logo/icona-192.png',
   './assets/logo/icona-512.png',
   './manifest.webmanifest',
+  './assets/mappa/sanza-cervati.jpg',
 ];
 /* i caratteri: solo i pesi che la pagina usa davvero nei testi */
 for (const f of ['Archivo-500','Archivo-600','Archivo-700','Archivo-800','Archivo-900',
@@ -136,7 +137,7 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== location.origin) return;   // la mappa Google non ci riguarda
+  if (url.origin !== location.origin) return;
 
   /* In cache ogni file ha una copia sola, sotto l'indirizzo senza
      parametri. Il totem apre la pagina con ?totem=1: se la copia

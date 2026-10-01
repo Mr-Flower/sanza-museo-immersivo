@@ -93,8 +93,7 @@ function apri() {
     webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false },
   });
 
-  /* Dal museo non si esce: niente finestre nuove, niente altri siti.
-     (La mappa di Google vive nel suo iframe e non passa di qui.) */
+  /* Dal museo non si esce: niente finestre nuove, niente altri siti. */
   finestra.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   finestra.webContents.on('will-navigate', (e, url) => { if (!url.startsWith('app://sanza/')) e.preventDefault(); });
 
